@@ -1,17 +1,11 @@
-// import Exercise from './Exercise'
-import './ExerciseList.css'
+import './AccessoryList.css'
 
-function AccessoryList({ accessoryList, onClick }) {
-
-  const handleClick = ({ target }) => {
-    const accessory = target.value
-    onClick(accessory)
-  }
+function AccessoryList({ accessoryList, addAccessory, accessories }) {
 
   return (
     <div>
-      {accessoryList.map((accessory, index) => (
-        <button value={accessory.name} onClick={handleClick} key={accessory._id}>
+      {accessoryList.map(accessory => (
+        accessories.includes(accessory) ? null : <button value={accessory} onClick={() => addAccessory(accessory)} key={accessory._id}>
           {accessory.name}
         </button>
       ))}

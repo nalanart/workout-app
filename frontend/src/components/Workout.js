@@ -11,6 +11,8 @@ function Workout() {
   const [accessoryList, setAccessoryList] = useState([])
   const [session, setSession] = useState(1)
   
+  const sessionNum = session === 1 ? 'sessionOne' : 'sessionTwo'
+
   useEffect(() => {
 
     setSession(() => {
@@ -32,7 +34,7 @@ function Workout() {
   }, [day])
 
   const addAccessory = accessory => {
-    setAccessories(prev => [accessory, ...prev])
+    setAccessories(prev => [...prev, accessory])
   }
 
   const removeAccessory = targetIndex => {
@@ -47,6 +49,7 @@ function Workout() {
         return prev + 1
       }
     })
+    setAccessories([])
   }
 
   return (
@@ -55,8 +58,10 @@ function Workout() {
       <h3>Main Lifts</h3>
       <ul>
         {mains.map(main => (
-          <li key={main._id}>
-            {main.name}
+          !(main[sessionNum].setsRegular) ? null : <li key={main._id}>
+            <p>{main[sessionNum].setsRegular}x{main[sessionNum].repsRegular}</p>
+            {main[sessionNum].setsAmrap && <p>, {main[sessionNum].setsAmrap}x{main[sessionNum].repsAmrap}</p>}
+            <p>&nbsp;{main.name}</p>
           </li>
         ))}
       </ul>
@@ -64,12 +69,12 @@ function Workout() {
       <ul>
         {accessories.map((accessory, index) => (
           <li onClick={() => removeAccessory(index)} key={index}>
-            {accessory}
+            <p>{accessory[sessionNum].setsRegular}x{accessory[sessionNum].repsRegular} {accessory.name}</p>
           </li>
         ))}
       </ul>
       <h4>Add accessories</h4>
-      <AccessoryList accessoryList={accessoryList} onClick={addAccessory} />
+      <AccessoryList accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
       <button onClick={goNextDay}>Finish Workout</button>
     </div>
   )
