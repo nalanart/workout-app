@@ -8,7 +8,7 @@ exercisesRouter.get('/', async (req, res) => {
     console.log(`connected to DB`)
   })
 
-  Exercise.find({ day: req.query.day, liftType: req.query.liftType }, (err, collection) => {
+  await Exercise.find({ day: req.query.day, liftType: req.query.liftType }, (err, collection) => {
     if(err) {
       throw err
     } else {
@@ -16,7 +16,27 @@ exercisesRouter.get('/', async (req, res) => {
     }
   })
 
+})
 
+exercisesRouter.post('/', async (req, res) => {
+  await mongoose.connect('mongodb+srv://nalanart:ttyDPj9vx2sDNJqn@cluster0.2iplh.mongodb.net/workout-app-db?retryWrites=true&w=majority', 
+  { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+    console.log(`connected to DB`)
+  })
+
+  await Exercise.create({
+    name: req.body.name,
+    day: req.body.day,
+    liftType: req.body.liftType,
+    sessionOne: req.body.sessionOne,
+    sessionTwo: req.body.sessionTwo
+  }, err => {
+    if(err) {
+      throw err
+    } else {
+      res.sendStatus(201)
+    }
+  })
 
 })
 

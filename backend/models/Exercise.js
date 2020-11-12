@@ -8,7 +8,7 @@ const exerciseSchema = new mongoose.Schema({
     setsRegular: String,
     repsRegular: String,
     setsAmrap: String, 
-    repsAmrap: String,
+    repsAmrap: String
   },
   sessionTwo: {
     setsRegular: String,
