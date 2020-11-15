@@ -1,7 +1,7 @@
 function NewAccessory({ handleChange, handleSubmit, handleSelect, newAccessory }) {
 
   return (
-    <div>
+    <div className="NewAccessory">
       <h3>Don't see a specific exercise? Create it!</h3>
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Exercise Name" value={newAccessory.name} onChange={handleChange} required />

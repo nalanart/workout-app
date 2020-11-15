@@ -1,188 +1,116 @@
-import React, { useState, useEffect } from 'react'
-import AccessoryList from './AccessoryList'
-import NewAccessory from './NewAccessory'
 import axios from 'axios'
+import { useState, useEffect } from 'react'
 
-const schedule = ['push', 'pull', 'legs', 'rest', 'push', 'pull', 'legs']
+function Workout({ match }) {
 
-function Workout() {
-  const [day, setDay] = useState(1)
-  const [mains, setMains] = useState([])
-  const [accessories, setAccessories] = useState([])
-  const [accessoryList, setAccessoryList] = useState([])
-  const [session, setSession] = useState(1)
-  const [newAccessory, setNewAccessory] = useState({
-    name: '',
-    day: 'legs',
-    liftType: 'accessory',
-    sessionOne: {
-      setsRegular: '3',
-      repsRegular: '',
-      setsAmrap: '',
-      repsAmrap: ''
-    },
-    sessionTwo: {
-      setsRegular: '3',
-      repsRegular: '',
-      setsAmrap: '',
-      repsAmrap: ''
-    }
+  const [workout, setWorkout] = useState({})
+
+  const [inEditMode, setInEditMode] = useState({
+    status: false,
+    rowKey: null
   })
-  
-  const sessionNum = session === 1 ? 'sessionOne' : 'sessionTwo'
+
+  const [reps, setReps] = useState()
 
   useEffect(() => {
+    axios.get(`/workouts/${match.params.workoutId}`).then(res => {
+      setWorkout(res.data)
+    })
+  }, [match.params.workoutId])
 
-    setSession(() => {
-      if(day > 3) {
-        return 2
-      } else {
-        return 1
-      }
+  const onEdit = ({id, currentReps}) => {
+    setInEditMode({
+      status: true,
+      rowKey: id
     })
 
-    axios.get(`/exercises?day=${schedule[day]}&liftType=main`).then(res => {
-      setMains(res.data)
+    setReps(currentReps)
+  }
+
+  const onCancel = () => {
+    setInEditMode({
+      status: false,
+      rowKey: null
     })
-
-    axios.get(`/exercises?day=${schedule[day]}&liftType=accessory`).then(res => {
-      setAccessoryList(res.data)
-    })
-
-  }, [day])
-
-  const addAccessory = accessory => {
-    setAccessories(prev => [...prev, accessory])
-  }
-
-  const removeAccessory = targetIndex => {
-    setAccessories(prev => prev.filter((accessory, index) => index !== targetIndex))    
-  }
-
-  const handleChange = ({ target }) => {
-    const { value } = target
-    setNewAccessory(prev => ({
-      ...prev,
-      name: value
-    }))
-  }
-
-  const handleSelect = ({ target }) => {
-    const { value } = target
-    setNewAccessory(prev => {
-      if(value === 'legs' || value === 'push' || value === 'pull') {
-        return {
-          ...prev,
-          day: value
-        }
-      }
-      else if(value === '8-12' || value === '15-20') {
-        return {
-          ...prev,
-          sessionOne: {
-            ...prev.sessionOne,
-            repsRegular: value
-          },
-          sessionTwo: {
-            ...prev.sessionTwo,
-            repsRegular: value
-          }
-        }
-      }
-      else if(value === '3' || value === '4' || value === '5') {
-        return {
-          ...prev,
-          sessionOne: {
-            ...prev.sessionOne,
-            setsRegular: value
-          },
-          sessionTwo: {
-            ...prev.sessionTwo,
-            setsRegular: value
-          }
-        }
-      }
-    })
-  }
-
-  /*
-  const handleRadio = ({ target }) => {
-    const { value } = target
-    setNewAccessory(prev => ({
-      ...prev,
-      
-
-    }))
-  }
-*/
-  const handleSubmit = (event) => {
-    event.preventDefault()
     
-    axios.post('/exercises', newAccessory).then(res => {
-      console.log(res)
-    }).catch(err => {
-      console.log(err)
-    })
-
-    setAccessoryList(prev => [...prev, newAccessory])
-    setNewAccessory({
-      name: '',
-      day: newAccessory.day,
-      liftType: 'accessory',
-      sessionOne: {
-        setsRegular: newAccessory.sessionOne.setsRegular,
-        repsRegular: newAccessory.sessionOne.repsRegular,
-        setsAmrap: '',
-        repsAmrap: ''
-      },
-      sessionTwo: {
-        setsRegular: newAccessory.sessionTwo.setsRegular,
-        repsRegular: newAccessory.sessionTwo.repsRegular,
-        setsAmrap: '',
-        repsAmrap: ''
-      }
-    })
+    setReps(null)
   }
 
-  const goNextDay = () => {
-    setDay(prev => {
-      if(prev === 6) {
-        return 0
-      } else {
-        return prev + 1
-      }
-    })
-    setAccessories([])
+  const updateWorkout = ({id, newReps}) => {
+
   }
 
-  return (
+  const onSave = ({id, newReps}) => {
+
+  }
+
+  if(Object.keys(workout).length === 0) {
+    return <p>Loading...</p>
+  }
+
+  return ( 
     <div>
-      <h2>{schedule[day].toUpperCase()} Day</h2>
-      <h3>Main Lifts</h3>
-      <ul>
-        {mains.map(main => (
-          !(main[sessionNum].setsRegular) ? null : <li key={main._id}>
-            <p>{main[sessionNum].setsRegular}x{main[sessionNum].repsRegular}</p>
-            {main[sessionNum].setsAmrap && <p>, {main[sessionNum].setsAmrap}x{main[sessionNum].repsAmrap}</p>}
-            <p>&nbsp;{main.name}</p>
-          </li>
-        ))}
-      </ul>
-      <h3>Accessories</h3>
-      <ul>
-        {accessories.map((accessory, index) => (
-          <li onClick={() => removeAccessory(index)} key={index}>
-            <p>{accessory[sessionNum].setsRegular}x{accessory[sessionNum].repsRegular} {accessory.name}</p>
-          </li>
-        ))}
-      </ul>
-      <h4>Add accessories</h4>
-      <AccessoryList accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
-      <NewAccessory handleChange={handleChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />
-      <button onClick={goNextDay}>Finish Workout</button>
+      <h1>Today's Date</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Exercise</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+          </tr>
+        </thead>
+        <tbody>
+          {workout.mains.map(main => (
+            <tr key={main._id}>
+              <td>
+                {main.name}
+              </td>
+              <td>
+                <input type="number" />
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+            </tr>
+          ))}
+          {workout.accessories.map(accessory => (
+            <tr key={accessory._id}>
+              <td>
+                {accessory.name}
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+              <td>
+              <input type="number" />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
-
 }
 
 export default Workout

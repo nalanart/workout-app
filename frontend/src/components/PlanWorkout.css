@@ -1,0 +1,13 @@
+.PlanWorkout {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.main-lifts li {
+  display: flex;
+}
+
+.accessory-lifts li {
+  list-style: none;
+}
