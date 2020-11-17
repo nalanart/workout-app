@@ -15,7 +15,9 @@ const exerciseSchema = new mongoose.Schema({
     repsRegular: String,
     setsAmrap: String, 
     repsAmrap: String
-  }
+  },
+  weight: Number,
+  currentExercise: { type: Boolean, default: false }
 })
 
 const Exercise = mongoose.model('Exercise', exerciseSchema, 'exercises')

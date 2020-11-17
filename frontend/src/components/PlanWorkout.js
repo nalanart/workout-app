@@ -28,7 +28,9 @@ function PlanWorkout() {
       repsRegular: '',
       setsAmrap: '',
       repsAmrap: ''
-    }
+    },
+    weight: '',
+    currentExercise: false
   })
   const [workout, setWorkout] = useState({})
   
@@ -133,7 +135,9 @@ function PlanWorkout() {
         repsRegular: newAccessory.sessionTwo.repsRegular,
         setsAmrap: '',
         repsAmrap: ''
-      }
+      },
+      weight: '',
+      currentExercise: false
     })
   }
 
