@@ -2,6 +2,7 @@ import './App.css';
 import NavBar from './components/NavBar'
 import PlanWorkout from './components/PlanWorkout'
 import Workout from './components/Workout'
+import History from './components/History'
 
 import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom'
 
@@ -14,7 +15,8 @@ function App() {
         <NavBar />
         <Switch>
           <Route path="/plan" component={PlanWorkout} />
-          <Route path="/workout/:workoutId" component={Workout} />
+          <Route path="/workouts/:workoutId" component={Workout} />
+          <Route path="/history" component={History} />
         </Switch>
       </Router>
       

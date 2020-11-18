@@ -13,6 +13,10 @@ function Workout({ match }) {
 
   const [allExercises, setAllExercises] = useState([])
 
+  const [completedWorkout, setCompletedWorkout] = useState({})
+
+  const [initialPost, setInitialPost] = useState(false)
+
   useEffect(() => {
     axios.get(`/workouts/${match.params.workoutId}`).then(res => {
       setWorkout(res.data)
@@ -20,6 +24,20 @@ function Workout({ match }) {
     })
 
   }, [])
+
+  useEffect(async () => {
+    
+    if(initialPost) {
+      try {
+        await axios.post('/history', completedWorkout)
+      } catch(error) {
+        throw error
+      }
+
+      setInitialPost(false)
+    }
+    
+  }, [completedWorkout])
 
   const handleChange1 = (event, exercise) => {
     const { value } = event.target
@@ -43,7 +61,7 @@ function Workout({ match }) {
     })
   }
 
-  const handleSubmit = (currentId, index) => {
+  const handleSubmit = (index) => {
     if(index === allExercises.length - 1) {
       setAllExercises(prev => {
         prev.splice(index, 1, {
@@ -70,6 +88,23 @@ function Workout({ match }) {
     setCompletedExercise({
       reps: [null, null, null, null, null]
     })
+  }
+
+  const postWorkout = () => {
+    setInitialPost(true)
+
+    let today = new Date()
+    const dd = String(today.getDate()).padStart(2, '0')
+    const mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0
+    const yyyy = today.getFullYear()
+    today = `${mm}/${dd}/${yyyy}`
+
+    setCompletedWorkout({
+      date: today,
+      day: workout.mains[0].day,
+      exercises: completedExercises
+    })
+    
   }
 
   if(Object.keys(workout).length === 0) {
@@ -111,12 +146,12 @@ function Workout({ match }) {
               <td>
                 <input type="number" onChange={e => handleChange2(e, 5)} disabled={!exercise.currentExercise} />
               </td>
-              <button onClick={() => handleSubmit(exercise._id, index)} disabled={!exercise.currentExercise}>Done</button>
+              <button onClick={() => handleSubmit(index)} disabled={!exercise.currentExercise}>Done</button>
             </tr>
           ))}
         </tbody>
       </table>
-      <button>Finish Workout</button>
+      <button onClick={postWorkout}>Finish Workout</button>
     </div>
   )
 }

@@ -15,7 +15,7 @@ function NavBar() {
             Today's Workout
           </li>
         </Link>
-        <Link to="/workouts">
+        <Link to="/history">
           <li>
             History
           </li>

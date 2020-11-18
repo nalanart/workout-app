@@ -43,6 +43,7 @@ workoutsRouter.post('/', async (req, res) => {
     { useNewUrlParser: true, useUnifiedTopology: true })
 
     const workout = await Workout.create({
+      _id: new mongoose.Types.ObjectId().toHexString(),
       mains: req.body.mains,
       accessories: req.body.accessories
     })

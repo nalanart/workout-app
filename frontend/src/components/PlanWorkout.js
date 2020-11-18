@@ -33,6 +33,7 @@ function PlanWorkout() {
     currentExercise: false
   })
   const [workout, setWorkout] = useState({})
+  const [post, setPost] = useState(false)
   
   const sessionNum = session === 1 ? 'sessionOne' : 'sessionTwo'
 
@@ -55,6 +56,20 @@ function PlanWorkout() {
     })
 
   }, [day, sessionNum])
+
+  useEffect(() => {
+    async function postWorkout() {
+      await axios.post('/workouts', workout)
+    }
+    if(post) {
+      try {
+        postWorkout()
+      } catch(error) {
+        throw error
+      }
+    }
+    setPost(false)
+  }, [workout])
 
   const addAccessory = accessory => {
     setAccessories(prev => [...prev, accessory])
@@ -201,7 +216,7 @@ function PlanWorkout() {
       <button onClick={handleClick2}>
         Post Workout
       </button>
-      <Link to={`/workout/${workout._id}`}>
+      <Link to={`/workouts/${workout._id}`}>
         View Workout
       </Link>
       
