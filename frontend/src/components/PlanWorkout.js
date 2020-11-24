@@ -32,6 +32,7 @@ function PlanWorkout({ day, session, handleClick }) {
   const [exerciseToEdit, setExerciseToEdit] = useState({})
 
   const [weight, setWeight] = useState(0)
+  const [passExercise, setPassExercise] = useState({})
 
   const initialPut = useRef(false)
 
@@ -172,16 +173,18 @@ function PlanWorkout({ day, session, handleClick }) {
     })
   }
 
+// -------------------------- EDIT EXERCISE ----------------------------------
   const editExercise = exercise => {
     setEditMode(true)
-    setExerciseToEdit(exercise)
+    setPassExercise(exercise)
   }
 
-  const saveChanges = async editedExercise => {
-    await axios.put(`/exercises/${editedExercise._id}`, editedExercise)
+  const saveChanges = editedExercise => {
+    initialPut.current = true
+    setExerciseToEdit(editedExercise)
     setEditMode(false)
-    setExerciseToEdit({})
   }
+// ---------------------------------------------------------------------------
 
   return (
     <div className="PlanWorkout">
@@ -216,13 +219,14 @@ function PlanWorkout({ day, session, handleClick }) {
                 </div>}
               </p>
               <div className="buttons-div">
+                <button onClick={() => editExercise(accessory)}>Edit</button>
                 <button onClick={() => removeAccessory(accessory, index)}>x</button>
               </div>
             </li>
           ))}
         </ul>
         <h4>Add accessories</h4>
-        {editMode ? <EditExercise exercise={exerciseToEdit} saveChanges={saveChanges} /> : null}
+        {editMode ? <EditExercise exercise={passExercise} saveChanges={saveChanges} /> : null}
         <AccessoryList session={session} accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} editExercise={editExercise} />
         <button>Create new</button>
         <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />

@@ -9,7 +9,6 @@ function AccessoryList({ session, accessoryList, addAccessory, accessories, edit
           <li className="accessory-list-li" key={accessory._id}>
             {accessory[session].setsRegular}x{accessory[session].repsRegular} {accessory.name}
             <button onClick={() => addAccessory(accessory)}>Add</button>
-            <button onClick={() => editExercise(accessory)}>Edit</button>
           </li>
         ))}
       </ul>

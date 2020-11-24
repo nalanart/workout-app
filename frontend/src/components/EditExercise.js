@@ -79,7 +79,7 @@ function EditExercise({ exercise, saveChanges }) {
         </div>
         <div className="form-weight">
           <p>Weight (lbs):</p>
-          <input type="number" placeholder={exercise.weight} value={exerciseEdit.weight} min="0" step="2.5" onChange={handleWeight} />
+          <input type="number" placeholder={exercise.weight} value={exerciseEdit.weight} min="0" step="2.5" onChange={handleWeight} disabled={!exercise.weight}/>
         </div>
         <button onClick={() => saveChanges(exerciseEdit)}>Save</button>
       </form>
