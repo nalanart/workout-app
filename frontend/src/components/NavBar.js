@@ -5,14 +5,19 @@ function NavBar() {
   return (
     <nav className="NavBar">
       <ul className="links">
-        <Link>
+        <Link to="/overview">
           <li>
             Overview
           </li>
         </Link>
         <Link to="/plan">
           <li>
-            Today's Workout
+            Plan
+          </li>
+        </Link>
+        <Link to="/workout">
+          <li>
+            Current Workout
           </li>
         </Link>
         <Link to="/history">

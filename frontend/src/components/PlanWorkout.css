@@ -1,13 +1,45 @@
-.PlanWorkout {
+div.PlanWorkout {
   display: flex;
-  align-items: center;
   flex-direction: column;
 }
 
-.main-lifts li {
-  display: flex;
+.main-lifts ul,
+.accessory-lifts ul {
+  padding: 0;
 }
 
-.accessory-lifts li {
-  list-style: none;
+ul.accessory-lifts-ul {
+  
+}
+
+.main-lifts-ul li,
+.accessory-lifts-ul li {
+  margin-bottom: 10%;
+  list-style: none;  
+}
+
+li p {
+  display: inline;
+}
+
+div.buttons-div {
+  float: right;
+}
+
+div.main-lifts {
+  border: 1px solid rgb(0, 0, 0);
+  width: 40%;
+}
+
+div.accessory-lifts {
+  border: 1px solid rgb(0, 0, 0);
+  width: 50%;
+}
+
+.main-lifts h3,
+.main-lifts ul,
+.accessory-lifts ul,
+.accessory-lifts h3,
+.accessory-lifts h4 {
+  margin-left: 10px;
 }

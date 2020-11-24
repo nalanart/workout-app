@@ -28,7 +28,7 @@ historyRouter.get('/', async (req, res) => {
 
     const completedWorkouts = await CompletedWorkout.find({})
 
-    res.send(completedWorkouts)
+    res.json(completedWorkouts)
 
   } catch(error) {
     throw error

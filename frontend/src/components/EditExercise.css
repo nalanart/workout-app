@@ -1,0 +1,28 @@
+.EditExercise {
+  position: absolute;
+  background-color: rgb(211, 222, 247);
+  padding: 20px;
+  border: 1px solid rgb(0,0,0)
+}
+
+.EditExercise p {
+  margin-top: 0;
+  margin-bottom: 5%;
+}
+
+.form-reps p {
+  margin: 0;
+}
+
+form.form-edit-exercise {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-edit-exercise button {
+  float: right;
+}
+
+.form-edit-exercise select {
+  width: 20%;
+}

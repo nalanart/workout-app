@@ -1,11 +1,8 @@
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './Workout.css'
 
-function Workout({ match }) {
-
-  const [workout, setWorkout] = useState({})
-
+function Workout({ workout, goNextDay }) {
   const [completedExercise, setCompletedExercise] = useState({
     reps: [null, null, null, null, null]
   })
@@ -15,32 +12,36 @@ function Workout({ match }) {
 
   const [completedWorkout, setCompletedWorkout] = useState({})
 
-  const [initialPost, setInitialPost] = useState(false)
+  const initialPost = useRef(false)
+
+  const currentExercise = useRef(null)
 
   useEffect(() => {
-    axios.get(`/workouts/${match.params.workoutId}`).then(res => {
-      setWorkout(res.data)
-      setAllExercises(res.data.mains.concat(res.data.accessories))
-    })
+    if(Object.keys(workout).length !== 0) {
+      currentExercise.current = workout.mains[0]
+      setAllExercises(workout.mains.concat(workout.accessories))
+    }
+  }, [workout])
 
-  }, [])
+  useEffect(() => {
+    async function submitWorkout() {
+      await axios.post('/history', completedWorkout)
+    }
 
-  useEffect(async () => {
-    
-    if(initialPost) {
+    if(initialPost.current) {
       try {
-        await axios.post('/history', completedWorkout)
+        submitWorkout()
       } catch(error) {
         throw error
       }
 
-      setInitialPost(false)
+      initialPost.current = false
     }
-    
   }, [completedWorkout])
 
   const handleChange1 = (event, exercise) => {
     const { value } = event.target
+
     setCompletedExercise(prev => {
       prev.reps.splice(0, 1, Number(value))
       return {
@@ -50,6 +51,7 @@ function Workout({ match }) {
       }
     })
   }
+
   const handleChange2 = ({ target }, col) => {
     const { value } = target
     setCompletedExercise(prev => {
@@ -62,27 +64,7 @@ function Workout({ match }) {
   }
 
   const handleSubmit = (index) => {
-    if(index === allExercises.length - 1) {
-      setAllExercises(prev => {
-        prev.splice(index, 1, {
-          ...prev[index],
-          currentExercise: false
-        })
-        return prev
-      })
-    } else {
-      setAllExercises(prev => {
-        prev.splice(index, 1, {
-          ...prev[index],
-          currentExercise: false
-        })
-        prev.splice(index + 1, 1, {
-          ...prev[index + 1],
-          currentExercise: true
-        })
-        return prev
-      })
-    }
+    currentExercise.current = allExercises[index + 1]
 
     setCompletedExercises(prev => [...prev, completedExercise])
     setCompletedExercise({
@@ -91,7 +73,7 @@ function Workout({ match }) {
   }
 
   const postWorkout = () => {
-    setInitialPost(true)
+    initialPost.current = true
 
     let today = new Date()
     const dd = String(today.getDate()).padStart(2, '0')
@@ -104,7 +86,8 @@ function Workout({ match }) {
       day: workout.mains[0].day,
       exercises: completedExercises
     })
-    
+
+    goNextDay()
   }
 
   if(Object.keys(workout).length === 0) {
@@ -129,24 +112,24 @@ function Workout({ match }) {
           {allExercises.map((exercise, index) => (
             <tr key={exercise._id}>
               <td>
-                {exercise.name} @ {exercise.weight}
+                {exercise.name} @ {exercise.weight ? exercise.weight : 0} lbs
               </td>
               <td>
-                <input type="number" onChange={e => handleChange1(e, exercise)} disabled={!exercise.currentExercise} />
+                <input type="number" onChange={e => handleChange1(e, exercise)} disabled={exercise !== currentExercise.current} />
               </td>
               <td>
-                <input type="number" onChange={e => handleChange2(e, 2)} disabled={!exercise.currentExercise} />
+                <input type="number" onChange={e => handleChange2(e, 2)} disabled={exercise !== currentExercise.current} />
               </td>
               <td>
-                <input type="number" onChange={e => handleChange2(e, 3)} disabled={!exercise.currentExercise} />
+                <input type="number" onChange={e => handleChange2(e, 3)} disabled={exercise !== currentExercise.current} />
               </td>
               <td>
-                <input type="number" onChange={e => handleChange2(e, 4)} disabled={!exercise.currentExercise} />
+                <input type="number" onChange={e => handleChange2(e, 4)} disabled={exercise !== currentExercise.current} />
               </td>
               <td>
-                <input type="number" onChange={e => handleChange2(e, 5)} disabled={!exercise.currentExercise} />
+                <input type="number" onChange={e => handleChange2(e, 5)} disabled={exercise !== currentExercise.current} />
               </td>
-              <button onClick={() => handleSubmit(index)} disabled={!exercise.currentExercise}>Done</button>
+              <button onClick={() => handleSubmit(index)} disabled={exercise !== currentExercise.current}>Done</button>
             </tr>
           ))}
         </tbody>

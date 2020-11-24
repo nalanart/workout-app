@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import AccessoryList from './AccessoryList'
 import NewAccessory from './NewAccessory'
+import EditExercise from './EditExercise'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import './PlanWorkout.css'
 
-const schedule = ['push', 'pull', 'legs', 'rest', 'push', 'pull', 'legs']
-
-function PlanWorkout() {
-  const [day, setDay] = useState(1)
+function PlanWorkout({ day, session, handleClick }) {
   const [mains, setMains] = useState([])
   const [accessories, setAccessories] = useState([])
   const [accessoryList, setAccessoryList] = useState([])
-  const [session, setSession] = useState(1)
   const [newAccessory, setNewAccessory] = useState({
     name: '',
     day: 'legs',
@@ -29,57 +26,69 @@ function PlanWorkout() {
       setsAmrap: '',
       repsAmrap: ''
     },
-    weight: '',
-    currentExercise: false
+    weight: '0',
   })
-  const [workout, setWorkout] = useState({})
-  const [post, setPost] = useState(false)
-  
-  const sessionNum = session === 1 ? 'sessionOne' : 'sessionTwo'
+  const [editMode, setEditMode] = useState(false)
+  const [exerciseToEdit, setExerciseToEdit] = useState({})
+
+  const [weight, setWeight] = useState(0)
+
+  const initialPut = useRef(false)
 
   useEffect(() => {
-
-    setSession(() => {
-      if(day > 3) {
-        return 2
-      } else {
-        return 1
-      }
+    axios.get(`/exercises?day=${day}&liftType=main`).then(res => {
+      setMains(res.data.filter(exercise => exercise[session].repsRegular))
     })
 
-    axios.get(`/exercises?day=${schedule[day]}&liftType=main`).then(res => {
-      setMains(res.data.filter(exercise => exercise[sessionNum].repsRegular))
-    })
-
-    axios.get(`/exercises?day=${schedule[day]}&liftType=accessory`).then(res => {
+    axios.get(`/exercises?day=${day}&liftType=accessory`).then(res => {
       setAccessoryList(res.data)
     })
 
-  }, [day, sessionNum])
+  }, [day, session])
 
   useEffect(() => {
-    async function postWorkout() {
-      await axios.post('/workouts', workout)
+    const updateExercise = async () => {
+      await axios.put(`/exercises/${exerciseToEdit._id}`, exerciseToEdit)
+      if(exerciseToEdit.liftType === 'main') {
+        const res = await axios.get(`/exercises?day=${day}&liftType=main`)
+        setMains(res.data.filter(exercise => exercise[session].repsRegular))
+      } else if(exerciseToEdit.liftType === 'accessory') {
+        const res = await axios.get(`/exercises?day=${day}&liftType=accessory`)
+        setAccessories(prev => res.data.filter(accessory => {
+          for(let i = 0; i < prev.length; i++) {
+            if(prev[i]._id === accessory._id) {
+              return true
+            }
+          }
+          return false
+        }))
+      }
     }
-    if(post) {
+
+    if(initialPut.current) {
       try {
-        postWorkout()
+        updateExercise()
+        setWeight(0)
       } catch(error) {
         throw error
       }
     }
-    setPost(false)
-  }, [workout])
+    initialPut.current = false
+  }, [exerciseToEdit])
 
   const addAccessory = accessory => {
     setAccessories(prev => [...prev, accessory])
+    setAccessoryList(prev => prev.filter(acc => acc !== accessory))
   }
 
-  const removeAccessory = targetIndex => {
-    setAccessories(prev => prev.filter((accessory, index) => index !== targetIndex))    
+  const removeAccessory = (accessory, targetIndex) => {
+    setAccessories(prev => prev.filter((accessory, index) => index !== targetIndex))
+    setAccessoryList(prev => [...prev, accessory])
+    setEditMode(false)
+    setExerciseToEdit({})
   }
 
-  const handleChange = ({ target }) => {
+  const handleNameChange = ({ target }) => {
     const { value } = target
     setNewAccessory(prev => ({
       ...prev,
@@ -125,6 +134,14 @@ function PlanWorkout() {
     })
   }
 
+  const setInitialWeight = exercise => {
+    initialPut.current = true
+    setExerciseToEdit({
+      ...exercise,
+      weight: weight
+    })
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     
@@ -151,78 +168,73 @@ function PlanWorkout() {
         setsAmrap: '',
         repsAmrap: ''
       },
-      weight: '',
-      currentExercise: false
+      weight: '0',
     })
   }
 
-  const handleClick = () => {
-    setWorkout({
-      mains: mains,
-      accessories: accessories
-    })
+  const editExercise = exercise => {
+    setEditMode(true)
+    setExerciseToEdit(exercise)
   }
 
-  const handleClick2 = async () => {
-    try {
-      const res = await axios.post('/workouts', workout)
-      setWorkout(prev => ({
-        ...prev,
-        _id: res.data._id
-      }))
-    } catch(error) {
-      throw error
-    }
-  }
-
-  const goNextDay = () => {
-    setDay(prev => {
-      if(prev === 6) {
-        return 0
-      } else {
-        return prev + 1
-      }
-    })
-    setAccessories([])
+  const saveChanges = async editedExercise => {
+    await axios.put(`/exercises/${editedExercise._id}`, editedExercise)
+    setEditMode(false)
+    setExerciseToEdit({})
   }
 
   return (
     <div className="PlanWorkout">
-      <h2>{schedule[day].toUpperCase()} DAY</h2>
-      <h3>Main Lift(s)</h3>
-      <ul className="main-lifts">
-        {mains.map(main => (
-          <li key={main._id}>
-            <p>{main[sessionNum].setsRegular}x{main[sessionNum].repsRegular}</p>
-            {main[sessionNum].setsAmrap && <p>, {main[sessionNum].setsAmrap}x{main[sessionNum].repsAmrap}</p>}
-          <p>&nbsp;{main.name}</p>
-          </li>
-        ))}
-      </ul>
-      <h3>Accessories</h3>
-      <ul className="accessory-lifts">
-        {accessories.map((accessory, index) => (
-          <li onClick={() => removeAccessory(index)} key={index}>
-            <p>{accessory[sessionNum].setsRegular}x{accessory[sessionNum].repsRegular} {accessory.name}</p>
-          </li>
-        ))}
-      </ul>
-      <h4>Add accessories</h4>
-      <AccessoryList accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
-      <NewAccessory handleChange={handleChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />
-      <button onClick={handleClick}>
-        Set Workout
+      <h2>PLAN YOUR WORKOUT</h2>
+      <h2>{day.toUpperCase()} DAY</h2>
+      <div className="main-lifts">
+        <h3>main lifts</h3>
+        <ul className="main-lifts-ul">
+          {mains.map((main, index) => (
+            <li key={main._id}>
+              <p>{main[session].setsRegular}x{main[session].repsRegular}</p>
+              {main[session].setsAmrap && <p>, {main[session].setsAmrap}x{main[session].repsAmrap}</p>}
+              <p>&nbsp;{main.name} @ {main.weight ? main.weight : 
+                <div className="initial-weight-not-set">
+                  <input placeholder="Set Initial Weight (lbs)" type="number" onChange={e => setWeight(e.target.value)} />
+                  <button onClick={() => setInitialWeight(main)}>Set</button>
+                </div>}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="accessory-lifts">
+        <h3>Accessories</h3>
+        <ul className="accessory-lifts-ul">
+          {accessories.map((accessory, index) => (
+            <li key={index}>
+              <p>{accessory[session].setsRegular}x{accessory[session].repsRegular} {accessory.name} @ {accessory.weight ? accessory.weight : 
+                <div className="initial-weight-not-set">
+                  <input placeholder="Set Initial Weight (lbs)" type="number" onChange={e => setWeight(e.target.value)} />
+                  <button onClick={() => setInitialWeight(accessory)}>Set</button>
+                </div>}
+              </p>
+              <div className="buttons-div">
+                <button onClick={() => removeAccessory(accessory, index)}>x</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <h4>Add accessories</h4>
+        {editMode ? <EditExercise exercise={exerciseToEdit} saveChanges={saveChanges} /> : null}
+        <AccessoryList session={session} accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} editExercise={editExercise} />
+        <button>Create new</button>
+        <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />
+      </div>
+      <button onClick={() => handleClick(mains, accessories)}>
+        Save Workout
       </button>
-      <button onClick={handleClick2}>
-        Post Workout
-      </button>
-      <Link to={`/workouts/${workout._id}`}>
+      <Link to='/workout'>
         View Workout
       </Link>
-      
     </div>
   )
-
 }
 
 export default PlanWorkout

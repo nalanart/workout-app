@@ -28,7 +28,7 @@ function History() {
   return (
     <div className="History">
       <h2>Workout History</h2>
-      {workoutHistory.map(workout => <CompletedWorkout key={workout._id} workout={workout} />)}
+      {workoutHistory.map(workout => <CompletedWorkout key={workout._id} workout={workout} />).sort((a, b) => b.date - a.date)}
     </div>
   )
 }
