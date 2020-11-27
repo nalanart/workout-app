@@ -18,7 +18,8 @@ ul.accessory-lifts-ul {
   list-style: none;  
 }
 
-li p {
+li p,
+li div {
   display: inline;
 }
 

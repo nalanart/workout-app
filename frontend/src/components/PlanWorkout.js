@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import './PlanWorkout.css'
 
-function PlanWorkout({ day, session, handleClick }) {
+function PlanWorkout({ day, session, handleClick, failedExercise }) {
   const [mains, setMains] = useState([])
   const [accessories, setAccessories] = useState([])
   const [accessoryList, setAccessoryList] = useState([])
@@ -15,18 +15,18 @@ function PlanWorkout({ day, session, handleClick }) {
     day: 'legs',
     liftType: 'accessory',
     sessionOne: {
-      setsRegular: '3',
+      setsRegular: 3,
       repsRegular: '',
       setsAmrap: '',
       repsAmrap: ''
     },
     sessionTwo: {
-      setsRegular: '3',
+      setsRegular: 3,
       repsRegular: '',
       setsAmrap: '',
       repsAmrap: ''
     },
-    weight: '0',
+    weight: 0,
   })
   const [editMode, setEditMode] = useState(false)
   const [exerciseToEdit, setExerciseToEdit] = useState({})
@@ -37,13 +37,21 @@ function PlanWorkout({ day, session, handleClick }) {
   const initialPut = useRef(false)
 
   useEffect(() => {
-    axios.get(`/exercises?day=${day}&liftType=main`).then(res => {
-      setMains(res.data.filter(exercise => exercise[session].repsRegular))
-    })
+    axios.get(`/exercises?day=${day}&liftType=main`)
+      .then(res => {
+        setMains(res.data.filter(exercise => exercise[session].repsRegular))
+      })
+      .catch(error => {
+        throw error
+      })
 
-    axios.get(`/exercises?day=${day}&liftType=accessory`).then(res => {
-      setAccessoryList(res.data)
-    })
+    axios.get(`/exercises?day=${day}&liftType=accessory`)
+      .then(res => {
+        setAccessoryList(res.data)
+      })
+      .catch(error => {
+        throw error
+      })
 
   }, [day, session])
 
@@ -65,7 +73,6 @@ function PlanWorkout({ day, session, handleClick }) {
         }))
       }
     }
-
     if(initialPut.current) {
       try {
         updateExercise()
@@ -169,11 +176,10 @@ function PlanWorkout({ day, session, handleClick }) {
         setsAmrap: '',
         repsAmrap: ''
       },
-      weight: '0',
+      weight: 0,
     })
   }
-
-// -------------------------- EDIT EXERCISE ----------------------------------
+// ------------------------------ EDIT EXERCISE ------------------------------
   const editExercise = exercise => {
     setEditMode(true)
     setPassExercise(exercise)
@@ -184,7 +190,45 @@ function PlanWorkout({ day, session, handleClick }) {
     setExerciseToEdit(editedExercise)
     setEditMode(false)
   }
-// ---------------------------------------------------------------------------
+// ----------------------- INCREASE/DECREASE/MAINTAIN WEIGHT ---------------------
+  const incrementWeight = exercise => {
+    setExerciseToEdit({
+      ...exercise,
+      weight: exercise.name === 'deadlift' ? exercise.weight + 10 : exercise.weight + 5, // +10 for deadlifts and +5 for squats, bench, row, and overhead press
+      failCount: 0 // reset counter
+    })
+  }
+
+  const decrementWeight = exercise => { // same for both mains and accessories
+    setExerciseToEdit({
+      ...exercise,
+      weight: Math.floor(0.9 * exercise.weight / 5) * 5, // remove 10% when deloading and round down to nearest multiple of 5
+      failCount: 0 // reset counter
+    })
+  }
+
+  const maintainWeight = exercise => {
+    setExerciseToEdit({
+      ...exercise,
+      failCount: exercise.failCount++ // increment fail counter
+    })
+  }
+// --------------------------------------------------------------------------------
+  const adjustWeight = async exercise => {
+    try {
+      const prevExercise = await axios.get(`/exercises/${exercise._id}`)
+      if(failedExercise(prevExercise) && prevExercise.failCount < 3) { // first or second time in a row failing exercise
+        maintainWeight(exercise)
+      } else if(failedExercise(prevExercise) && exercise.failCount === 3) { // third time in a row failing the exercise
+        decrementWeight(exercise)
+      } else {
+        incrementWeight(exercise)
+      }
+    } catch(error) {
+      throw error
+    }
+  }
+// --------------------------------------------------------------------------------
 
   return (
     <div className="PlanWorkout">
@@ -196,12 +240,18 @@ function PlanWorkout({ day, session, handleClick }) {
           {mains.map((main, index) => (
             <li key={main._id}>
               <p>{main[session].setsRegular}x{main[session].repsRegular}</p>
-              {main[session].setsAmrap && <p>, {main[session].setsAmrap}x{main[session].repsAmrap}</p>}
-              <p>&nbsp;{main.name} @ {main.weight ? main.weight : 
-                <div className="initial-weight-not-set">
-                  <input placeholder="Set Initial Weight (lbs)" type="number" onChange={e => setWeight(e.target.value)} />
-                  <button onClick={() => setInitialWeight(main)}>Set</button>
-                </div>}
+              {main[session].setsAmrap && <p>, {main[session].setsAmrap}x{main[session].repsAmrap}+</p>}
+              <p>&nbsp;{main.name} @ {main.weight ? 
+              <div className="initial-weight-set">
+                {!main.reps && <p className="no-previously-completed">{main.weight} lbs</p>}
+                {(failedExercise(main) && main.failCount < 3) && <p className="maintain-weight"> {main.weight} lbs (=)</p>}
+                {(failedExercise(main) && main.failCount === 3) && <p className="decrement-weight"> {Math.floor(0.9 * main.weight / 5) * 5} lbs (&darr;)</p>}
+                {(!failedExercise(main) && main.reps) && <p className="increment-weight"> {main.weight + (main.name === 'deadlift' ? 10 : 5)} lbs (&uarr;)</p>}
+              </div> : 
+              <div className="initial-weight-not-set">
+                <input placeholder="Set Initial Weight (lbs)" type="number" min="0" step="2.5" onChange={e => setWeight(e.target.value)} />
+                <button onClick={() => setInitialWeight(main)}>Set</button>
+              </div>}
               </p>
             </li>
           ))}
@@ -212,9 +262,15 @@ function PlanWorkout({ day, session, handleClick }) {
         <ul className="accessory-lifts-ul">
           {accessories.map((accessory, index) => (
             <li key={index}>
-              <p>{accessory[session].setsRegular}x{accessory[session].repsRegular} {accessory.name} @ {accessory.weight ? accessory.weight : 
+              <p>{accessory[session].setsRegular}x{accessory[session].repsRegular} {accessory.name} @ {accessory.weight ? 
+                <div className="initial-weight-set">
+                  {!accessory.reps && <p className="no-previously-completed">{accessory.weight} lbs</p>}
+                  {(failedExercise(accessory) && accessory.failCount < 3) && <p className="maintain-weight"> {accessory.weight} lbs (=)</p>}
+                  {(failedExercise(accessory) && accessory.failCount === 3) && <p className="decrement-weight"> {Math.floor(0.9 * accessory.weight / 5) * 5} lbs (&darr;)</p>}
+                  {(!failedExercise(accessory) && accessory.reps) && <p className="increment-weight"> {accessory.weight + 5} lbs (&uarr;)</p>}
+                </div> : 
                 <div className="initial-weight-not-set">
-                  <input placeholder="Set Initial Weight (lbs)" type="number" onChange={e => setWeight(e.target.value)} />
+                  <input placeholder="Set Initial Weight (lbs)" type="number" min="0" step="2.5" onChange={e => setWeight(e.target.value)} />
                   <button onClick={() => setInitialWeight(accessory)}>Set</button>
                 </div>}
               </p>
@@ -227,7 +283,7 @@ function PlanWorkout({ day, session, handleClick }) {
         </ul>
         <h4>Add accessories</h4>
         {editMode ? <EditExercise exercise={passExercise} saveChanges={saveChanges} /> : null}
-        <AccessoryList session={session} accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} editExercise={editExercise} />
+        <AccessoryList session={session} accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
         <button>Create new</button>
         <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />
       </div>

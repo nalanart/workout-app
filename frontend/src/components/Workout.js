@@ -2,9 +2,9 @@ import axios from 'axios'
 import { useState, useEffect, useRef } from 'react'
 import './Workout.css'
 
-function Workout({ workout, goNextDay }) {
+function Workout({ workout, session, goNextDay }) {
   const [completedExercise, setCompletedExercise] = useState({
-    reps: [null, null, null, null, null]
+    reps: []
   })
   const [completedExercises, setCompletedExercises] = useState([])
 
@@ -41,12 +41,10 @@ function Workout({ workout, goNextDay }) {
 
   const handleChange1 = (event, exercise) => {
     const { value } = event.target
-
     setCompletedExercise(prev => {
       prev.reps.splice(0, 1, Number(value))
       return {
-        ...prev,
-        name: exercise.name,
+        ...exercise,
         reps: prev.reps
       }
     })
@@ -63,12 +61,13 @@ function Workout({ workout, goNextDay }) {
     })
   }
 
-  const handleSubmit = (index) => {
+  const handleSubmit = async index => {
     currentExercise.current = allExercises[index + 1]
+    await axios.put(`/exercises/${completedExercise._id}`, completedExercise)
 
     setCompletedExercises(prev => [...prev, completedExercise])
     setCompletedExercise({
-      reps: [null, null, null, null, null]
+      reps: []
     })
   }
 
@@ -112,7 +111,9 @@ function Workout({ workout, goNextDay }) {
           {allExercises.map((exercise, index) => (
             <tr key={exercise._id}>
               <td>
-                {exercise.name} @ {exercise.weight ? exercise.weight : 0} lbs
+                <p>{exercise[session].setsRegular}x{exercise[session].repsRegular}</p>
+                {exercise[session].setsAmrap && <p>, {exercise[session].setsAmrap}x{exercise[session].repsAmrap}+ </p>}
+                <p> {exercise.name} @ {exercise.weight ? exercise.weight : 0} lbs</p>
               </td>
               <td>
                 <input type="number" onChange={e => handleChange1(e, exercise)} disabled={exercise !== currentExercise.current} />
@@ -124,10 +125,11 @@ function Workout({ workout, goNextDay }) {
                 <input type="number" onChange={e => handleChange2(e, 3)} disabled={exercise !== currentExercise.current} />
               </td>
               <td>
-                <input type="number" onChange={e => handleChange2(e, 4)} disabled={exercise !== currentExercise.current} />
+                <input type="number" onChange={e => handleChange2(e, 4)} disabled={exercise !== currentExercise.current || exercise.sessionOne.setsRegular < 4} />
               </td>
               <td>
-                <input type="number" onChange={e => handleChange2(e, 5)} disabled={exercise !== currentExercise.current} />
+                <input type="number" onChange={e => handleChange2(e, 5)} 
+                                     disabled={exercise !== currentExercise.current || exercise.sessionOne.setsRegular + exercise.sessionOne.setsAmrap < 5} />
               </td>
               <button onClick={() => handleSubmit(index)} disabled={exercise !== currentExercise.current}>Done</button>
             </tr>

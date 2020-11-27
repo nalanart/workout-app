@@ -9,7 +9,7 @@ exercisesRouter.param('exerciseId', async (req, res, next, exerciseId) => {
 
     const exercise = await Exercise.findById(exerciseId).exec()
 
-    if(Object.keys(exercise).length === 0) {
+    if(exercise === null) {
       res.sendStatus(404)
     } else {
       req.exercise = exercise
@@ -22,16 +22,20 @@ exercisesRouter.param('exerciseId', async (req, res, next, exerciseId) => {
 
 exercisesRouter.get('/', async (req, res) => {
   try {
-    await mongoose.connect('mongodb+srv://nalanart:ttyDPj9vx2sDNJqn@cluster0.2iplh.mongodb.net/workout-app-db?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+    await mongoose.connect('mongodb+srv://nalanart:ttyDPj9vx2sDNJqn@cluster0.2iplh.mongodb.net/workout-app-db?retryWrites=true&w=majority', { 
+      useNewUrlParser: true, useUnifiedTopology: true 
+    })
 
     const exercises = await Exercise.find({ day: req.query.day, liftType: req.query.liftType }).exec()
 
-    res.send(exercises)
-
+    if(exercises === null) {
+      res.sendStatus(404)
+    } else {
+      res.send(exercises)
+    }
   } catch(error) {
     throw error
   }
-
 })
 
 exercisesRouter.post('/', async (req, res) => {
@@ -52,7 +56,6 @@ exercisesRouter.post('/', async (req, res) => {
   } catch(error) {
     throw error
   }
-
 })
 
 exercisesRouter.get('/:exerciseId', (req, res) => {
@@ -68,7 +71,8 @@ exercisesRouter.put('/:exerciseId', async (req, res) => {
       name: req.body.name,
       sessionOne: req.body.sessionOne,
       sessionTwo: req.body.sessionTwo,
-      weight: req.body.weight
+      weight: req.body.weight,
+      reps: req.body.reps
     })
 
     res.sendStatus(204)

@@ -22,13 +22,23 @@ historyRouter.param('completedId', async (req, res, next, completedId) => {
 })
 
 historyRouter.get('/', async (req, res) => {
+  let day = req.query.day
+
   try {
     await mongoose.connect('mongodb+srv://nalanart:ttyDPj9vx2sDNJqn@cluster0.2iplh.mongodb.net/workout-app-db?retryWrites=true&w=majority', 
     { useNewUrlParser: true, useUnifiedTopology: true })
 
-    const completedWorkouts = await CompletedWorkout.find({})
-
-    res.json(completedWorkouts)
+    if(!day) {
+      const completedWorkouts = await CompletedWorkout.find({})
+      res.json(completedWorkouts)
+    } else {
+      const latestWorkoutOfTypeDay = await CompletedWorkout.findOne({ day: day }).exec()
+      if(latestWorkoutOfTypeDay) {
+        res.json(latestWorkoutOfTypeDay)
+      } else {
+        res.sendStatus(404)
+      }
+    }
 
   } catch(error) {
     throw error

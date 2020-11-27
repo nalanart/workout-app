@@ -46,6 +46,18 @@ function App() {
     })
   }
 
+  // FAIL/SUCCESS LOGIC 
+  const failedExercise = exercise => {
+    if(exercise.reps) {
+      for(let i = 0; i < exercise.reps.length; i++) {
+        if(exercise.reps[i] < (exercise.liftType === 'main' ? 5 : 12)) {
+          return true // failed if any set was done for less than 5 reps
+        }
+      }
+      return false
+    }
+  }
+
   const goNextDay = () => {
     setDay(prev => {
       if(prev === 6) {
@@ -63,8 +75,8 @@ function App() {
         <NavBar />
         <Switch>
           <Route path="/overview" render={props => <Overview {...props} day={schedule[day]} handleSkip={goNextDay} />} />
-          <Route path="/plan" render={props => <PlanWorkout {...props} day={schedule[day]} session={session} handleClick={handleClick} />} />
-          <Route path="/workout" render={props => <Workout {...props} workout={currentWorkout} goNextDay={goNextDay} />} />
+          <Route path="/plan" render={props => <PlanWorkout {...props} day={schedule[day]} session={session} handleClick={handleClick} failedExercise={failedExercise} />} />
+          <Route path="/workout" render={props => <Workout {...props} workout={currentWorkout} session={session} goNextDay={goNextDay} />} />
           <Route path="/history" component={History} />
         </Switch>
       </Router>

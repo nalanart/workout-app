@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
 const exerciseSchema = new mongoose.Schema({
-  name: String,
-  day: String,
-  liftType: String,
+  name: {type: String, required: true},
+  day: {type: String, required: true},
+  liftType: {type: String, default: 'accessory'},
   sessionOne: {
     setsRegular: String,
     repsRegular: String,
@@ -16,8 +16,8 @@ const exerciseSchema = new mongoose.Schema({
     setsAmrap: String, 
     repsAmrap: String
   },
-  weight: Number,
-  currentExercise: { type: Boolean, default: false }
+  weight: {type: Number, default: 0},
+  failCount: {type: Number, default: 0}
 })
 
 const Exercise = mongoose.model('Exercise', exerciseSchema, 'exercises')
