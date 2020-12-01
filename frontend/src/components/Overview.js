@@ -21,7 +21,12 @@ function Overview({ day, handleSkip }) {
   }, [])
 
   if(!latestWorkout) {
-    return <p>You don't have any previously completed {day} workouts! GET TO WORK!!!!!!!!!!!</p>
+    return (
+      <div>
+        <p>You don't have any previously completed {day} workouts! GET TO WORK!!!!!!!!!!!</p>
+        <button onClick={handleSkip}>Skip</button>
+      </div>
+    )
   }
 
   return (

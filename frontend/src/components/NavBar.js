@@ -5,22 +5,22 @@ function NavBar() {
   return (
     <nav className="NavBar">
       <ul className="links">
-        <Link to="/overview">
+        <Link to="/overview" style={{ textDecoration: 'none' }}>
           <li>
             Overview
           </li>
         </Link>
-        <Link to="/plan">
+        <Link to="/plan" style={{ textDecoration: 'none' }}>
           <li>
             Plan
           </li>
         </Link>
-        <Link to="/workout">
+        <Link to="/workout" style={{ textDecoration: 'none' }}>
           <li>
             Current Workout
           </li>
         </Link>
-        <Link to="/history">
+        <Link to="/history" style={{ textDecoration: 'none' }}>
           <li>
             History
           </li>

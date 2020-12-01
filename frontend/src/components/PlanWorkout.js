@@ -33,6 +33,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
 
   const [weight, setWeight] = useState(0)
   const [passExercise, setPassExercise] = useState({})
+  const [creating, setCreating] = useState(false)
 
   const initialPut = useRef(false)
 
@@ -190,63 +191,24 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
     setExerciseToEdit(editedExercise)
     setEditMode(false)
   }
-// ----------------------- INCREASE/DECREASE/MAINTAIN WEIGHT ---------------------
-  const incrementWeight = exercise => {
-    setExerciseToEdit({
-      ...exercise,
-      weight: exercise.name === 'deadlift' ? exercise.weight + 10 : exercise.weight + 5, // +10 for deadlifts and +5 for squats, bench, row, and overhead press
-      failCount: 0 // reset counter
-    })
-  }
-
-  const decrementWeight = exercise => { // same for both mains and accessories
-    setExerciseToEdit({
-      ...exercise,
-      weight: Math.floor(0.9 * exercise.weight / 5) * 5, // remove 10% when deloading and round down to nearest multiple of 5
-      failCount: 0 // reset counter
-    })
-  }
-
-  const maintainWeight = exercise => {
-    setExerciseToEdit({
-      ...exercise,
-      failCount: exercise.failCount++ // increment fail counter
-    })
-  }
-// --------------------------------------------------------------------------------
-  const adjustWeight = async exercise => {
-    try {
-      const prevExercise = await axios.get(`/exercises/${exercise._id}`)
-      if(failedExercise(prevExercise) && prevExercise.failCount < 3) { // first or second time in a row failing exercise
-        maintainWeight(exercise)
-      } else if(failedExercise(prevExercise) && exercise.failCount === 3) { // third time in a row failing the exercise
-        decrementWeight(exercise)
-      } else {
-        incrementWeight(exercise)
-      }
-    } catch(error) {
-      throw error
-    }
-  }
-// --------------------------------------------------------------------------------
 
   return (
     <div className="PlanWorkout">
       <h2>PLAN YOUR WORKOUT</h2>
-      <h2>{day.toUpperCase()} DAY</h2>
+      <h3>{day.toUpperCase()} DAY</h3>
       <div className="main-lifts">
-        <h3>main lifts</h3>
+        <h3>Main Lifts</h3>
         <ul className="main-lifts-ul">
-          {mains.map((main, index) => (
+          {mains.map(main => (
             <li key={main._id}>
               <p>{main[session].setsRegular}x{main[session].repsRegular}</p>
               {main[session].setsAmrap && <p>, {main[session].setsAmrap}x{main[session].repsAmrap}+</p>}
               <p>&nbsp;{main.name} @ {main.weight ? 
               <div className="initial-weight-set">
-                {!main.reps && <p className="no-previously-completed">{main.weight} lbs</p>}
-                {(failedExercise(main) && main.failCount < 3) && <p className="maintain-weight"> {main.weight} lbs (=)</p>}
-                {(failedExercise(main) && main.failCount === 3) && <p className="decrement-weight"> {Math.floor(0.9 * main.weight / 5) * 5} lbs (&darr;)</p>}
-                {(!failedExercise(main) && main.reps) && <p className="increment-weight"> {main.weight + (main.name === 'deadlift' ? 10 : 5)} lbs (&uarr;)</p>}
+                {main.reps.length === 0 && <p className="no-previously-completed">{main.weight} lbs</p>}
+                {(failedExercise(main) && main.failCount > 0 && main.failCount < 3) && <p className="maintain-weight"> {main.weight} lbs (=)</p>}
+                {(failedExercise(main) && main.failCount === 0) && <p className="decrement-weight"> {main.weight} lbs (&darr;)</p>}
+                {(!failedExercise(main) && main.reps.length > 0) && <p className="increment-weight"> {main.weight} lbs (&uarr;)</p>}
               </div> : 
               <div className="initial-weight-not-set">
                 <input placeholder="Set Initial Weight (lbs)" type="number" min="0" step="2.5" onChange={e => setWeight(e.target.value)} />
@@ -258,36 +220,38 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
         </ul>
       </div>
       <div className="accessory-lifts">
-        <h3>Accessories</h3>
-        <ul className="accessory-lifts-ul">
-          {accessories.map((accessory, index) => (
-            <li key={index}>
-              <p>{accessory[session].setsRegular}x{accessory[session].repsRegular} {accessory.name} @ {accessory.weight ? 
-                <div className="initial-weight-set">
-                  {!accessory.reps && <p className="no-previously-completed">{accessory.weight} lbs</p>}
-                  {(failedExercise(accessory) && accessory.failCount < 3) && <p className="maintain-weight"> {accessory.weight} lbs (=)</p>}
-                  {(failedExercise(accessory) && accessory.failCount === 3) && <p className="decrement-weight"> {Math.floor(0.9 * accessory.weight / 5) * 5} lbs (&darr;)</p>}
-                  {(!failedExercise(accessory) && accessory.reps) && <p className="increment-weight"> {accessory.weight + 5} lbs (&uarr;)</p>}
-                </div> : 
-                <div className="initial-weight-not-set">
-                  <input placeholder="Set Initial Weight (lbs)" type="number" min="0" step="2.5" onChange={e => setWeight(e.target.value)} />
-                  <button onClick={() => setInitialWeight(accessory)}>Set</button>
-                </div>}
-              </p>
-              <div className="buttons-div">
-                <button onClick={() => editExercise(accessory)}>Edit</button>
-                <button onClick={() => removeAccessory(accessory, index)}>x</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <h4>Add accessories</h4>
-        {editMode ? <EditExercise exercise={passExercise} saveChanges={saveChanges} /> : null}
-        <AccessoryList session={session} accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
-        <button>Create new</button>
-        <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />
+        <div className="accessories-container">
+          <h3>Accessories</h3>
+          <ul className="accessory-lifts-ul">
+            {accessories.map((accessory, index) => (
+              <li key={index}>
+                <p>{accessory[session].setsRegular}x{accessory[session].repsRegular} {accessory.name} @ {accessory.weight ? 
+                  <div className="initial-weight-set">
+                    {accessory.reps.length === 0 && <p className="no-previously-completed">{accessory.weight} lbs</p>}
+                    {(failedExercise(accessory) && accessory.failCount > 0 && accessory.failCount < 3) && <p className="maintain-weight"> {accessory.weight} lbs (=)</p>}
+                    {(failedExercise(accessory) && accessory.failCount === 0) && <p className="decrement-weight"> {accessory.weight} lbs (&darr;)</p>}
+                    {(!failedExercise(accessory) && accessory.reps.length > 0) && <p className="increment-weight"> {accessory.weight} lbs (&uarr;)</p>}
+                  </div> : 
+                  <div className="initial-weight-not-set">
+                    <input placeholder="Set Initial Weight (lbs)" type="number" min="0" step="2.5" onChange={e => setWeight(e.target.value)} />
+                    <button onClick={() => setInitialWeight(accessory)}>Set</button>
+                  </div>}
+                </p>
+                <div className="buttons-div">
+                  <button onClick={() => editExercise(accessory)}>Edit</button>
+                  <button onClick={() => removeAccessory(accessory, index)}>x</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <h4>Add accessories</h4>
+          {editMode ? <EditExercise exercise={passExercise} saveChanges={saveChanges} /> : null}
+          <AccessoryList accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
+          <button onClick={() => setCreating(prev => !prev)}>Create new</button>
+          {creating && <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />}
+        </div>
       </div>
-      <button onClick={() => handleClick(mains, accessories)}>
+      <button className="save-workout" onClick={() => handleClick(mains, accessories)}>
         Save Workout
       </button>
       <Link to='/workout'>

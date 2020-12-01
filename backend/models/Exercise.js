@@ -17,7 +17,8 @@ const exerciseSchema = new mongoose.Schema({
     repsAmrap: String
   },
   weight: {type: Number, default: 0},
-  failCount: {type: Number, default: 0}
+  failCount: {type: Number, default: 0},
+  reps: [Number]
 })
 
 const Exercise = mongoose.model('Exercise', exerciseSchema, 'exercises')

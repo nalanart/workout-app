@@ -1,8 +1,26 @@
-.NewAccessory {
-  margin: 2%;
+div.NewAccessory {
+
 }
 
-.form-reps p,
-.form-weight p {
-  margin: 0;
+form.form-new-accessory {
+  margin-left: 5%;
+}
+
+.form-new-accessory input {
+  padding: 5px;
+  margin-right: 5%;
+  margin-bottom: 20px;
+}
+
+.form-reps-and-sets p {
+  display: inline;
+  margin-left: 5%;
+}
+
+.NewAccessory h4 {
+  padding-left: 3%;
+}
+
+.form-new-accessory button {
+  padding: 5px;
 }

@@ -72,6 +72,7 @@ exercisesRouter.put('/:exerciseId', async (req, res) => {
       sessionOne: req.body.sessionOne,
       sessionTwo: req.body.sessionTwo,
       weight: req.body.weight,
+      failCount: req.body.failCount,
       reps: req.body.reps
     })
 

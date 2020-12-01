@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState, useEffect, useRef } from 'react'
 import './Workout.css'
 
-function Workout({ workout, session, goNextDay }) {
+function Workout({ workout, session, goNextDay, failedExercise }) {
   const [completedExercise, setCompletedExercise] = useState({
     reps: []
   })
@@ -61,13 +61,49 @@ function Workout({ workout, session, goNextDay }) {
     })
   }
 
+  useEffect(() => {
+    const updateFailCount = async () => {
+      await axios.put(`/exercises/${completedExercise._id}`, completedExercise)
+    }
+
+    if(initialPost.current) {
+      try {
+        updateFailCount()
+        setCompletedExercises(prev => [...prev, completedExercise])
+        setCompletedExercise({
+          reps: []
+        })
+      } catch(error) {
+        throw error
+      }
+    }
+    initialPost.current = false
+  }, [completedExercise])
+
   const handleSubmit = async index => {
     currentExercise.current = allExercises[index + 1]
-    await axios.put(`/exercises/${completedExercise._id}`, completedExercise)
-
-    setCompletedExercises(prev => [...prev, completedExercise])
-    setCompletedExercise({
-      reps: []
+    initialPost.current = true
+    setCompletedExercise(prev => {
+      if(failedExercise(completedExercise)) {
+        if(completedExercise.failCount === 2) {
+          return {
+            ...prev,
+            weight: Math.floor(0.9 * completedExercise.weight / 5) * 5,
+            failCount: 0
+          }
+        } else {
+          return {
+            ...prev,
+            failCount: completedExercise.failCount++
+          }
+        }
+      } else {
+        return {
+          ...prev,
+          weight: completedExercise.weight + (completedExercise.name === 'deadlift' ? 10 : 5),
+          failCount: 0
+        }
+      }
     })
   }
 
