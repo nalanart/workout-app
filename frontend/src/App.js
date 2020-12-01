@@ -73,7 +73,7 @@ function App() {
       <Router>
         <div className="logo-container">
           <img src="https://www.flaticon.com/svg/static/icons/svg/249/249187.svg" alt="dumbbell" height="70" />
-          <h1 className="app-name">Workout App</h1>
+          <h1 className="app-name">&nbsp;Workout App</h1>
         </div>
         <NavBar />
         <Switch>

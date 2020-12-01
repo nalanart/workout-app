@@ -1,19 +1,35 @@
-div.PlanWorkout {
+div.PlanWorkout-container {
   display: flex;
   flex-direction: column;
-  width: 95%;
   margin: auto;
+  width: 70%;
 }
 
-.main-lifts ul,
-.accessory-lifts ul {
+h2.page-name {
+  text-align: center;
+}
+
+div.main-lifts,
+div.accessory-lifts {
+  border: 1px solid rgb(196, 196, 196);
+  margin-bottom: 2.5%;
+  display: flex;
+  align-items: center;
+}
+
+div.main-lifts-container,
+div.accessories-container {
+  width: 95%;
+  margin: 0 auto;
+}
+
+.PlanWorkout-container ul {
   padding: 0;
+  list-style: none;
 }
 
-.main-lifts-ul li,
-.accessory-lifts-ul li {
-  margin-bottom: 5%;
-  list-style: none;  
+.PlanWorkout-container li {
+  margin-bottom: 3.5%;
 }
 
 li p,
@@ -23,40 +39,9 @@ li div {
 
 div.buttons-div {
   float: right;
-  margin-right: 2.5%;
-}
-
-.buttons-div button,
-.accessory-lifts button {
-  background-color: rgb(255, 255, 255);
-}
-
-div.main-lifts {
-  border: 1px solid rgb(196, 196, 196);
-  width: 40%;
-  margin-bottom: 2.5%;
-}
-
-div.accessory-lifts {
-  border: 1px solid rgb(182, 182, 182);
-  width: 80%;
-  margin-bottom: 2.5%;
-}
-
-.main-lifts h3,
-.main-lifts ul,
-.accessory-lifts ul,
-.accessory-lifts button,
-.accessory-lifts h3,
-.accessory-lifts h4 {
-  margin-left: 10px;
-}
-
-div.accessories-container {
-  width: 90%;
-  margin-bottom: 5%;
 }
 
 button.save-workout {
   width: 10%;
 }
+

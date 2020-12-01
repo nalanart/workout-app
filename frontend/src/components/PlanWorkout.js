@@ -193,31 +193,33 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
   }
 
   return (
-    <div className="PlanWorkout">
-      <h2>PLAN YOUR WORKOUT</h2>
+    <div className="PlanWorkout-container">
+      <h2 className="page-name">PLAN YOUR WORKOUT</h2>
       <h3>{day.toUpperCase()} DAY</h3>
       <div className="main-lifts">
-        <h3>Main Lifts</h3>
-        <ul className="main-lifts-ul">
-          {mains.map(main => (
-            <li key={main._id}>
-              <p>{main[session].setsRegular}x{main[session].repsRegular}</p>
-              {main[session].setsAmrap && <p>, {main[session].setsAmrap}x{main[session].repsAmrap}+</p>}
-              <p>&nbsp;{main.name} @ {main.weight ? 
-              <div className="initial-weight-set">
-                {main.reps.length === 0 && <p className="no-previously-completed">{main.weight} lbs</p>}
-                {(failedExercise(main) && main.failCount > 0 && main.failCount < 3) && <p className="maintain-weight"> {main.weight} lbs (=)</p>}
-                {(failedExercise(main) && main.failCount === 0) && <p className="decrement-weight"> {main.weight} lbs (&darr;)</p>}
-                {(!failedExercise(main) && main.reps.length > 0) && <p className="increment-weight"> {main.weight} lbs (&uarr;)</p>}
-              </div> : 
-              <div className="initial-weight-not-set">
-                <input placeholder="Set Initial Weight (lbs)" type="number" min="0" step="2.5" onChange={e => setWeight(e.target.value)} />
-                <button onClick={() => setInitialWeight(main)}>Set</button>
-              </div>}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <div className="main-lifts-container">
+          <h3 className="section-name">Main Lifts</h3>
+          <ul className="main-lifts-ul">
+            {mains.map(main => (
+              <li key={main._id}>
+                <p>{main[session].setsRegular}x{main[session].repsRegular}</p>
+                {main[session].setsAmrap && <p>, {main[session].setsAmrap}x{main[session].repsAmrap}+</p>}
+                <p>&nbsp;{main.name} @ {main.weight ? 
+                <div className="initial-weight-set">
+                  {main.reps.length === 0 && <p className="no-previously-completed">{main.weight} lbs</p>}
+                  {(failedExercise(main) && main.failCount > 0 && main.failCount < 3) && <p className="maintain-weight"> {main.weight} lbs (=)</p>}
+                  {(failedExercise(main) && main.failCount === 0) && <p className="decrement-weight"> {main.weight} lbs (&darr;)</p>}
+                  {(!failedExercise(main) && main.reps.length > 0) && <p className="increment-weight"> {main.weight} lbs (&uarr;)</p>}
+                </div> : 
+                <div className="initial-weight-not-set">
+                  <input placeholder="Set Initial Weight (lbs)" type="number" min="0" step="2.5" onChange={e => setWeight(e.target.value)} />
+                  <button onClick={() => setInitialWeight(main)}>Set</button>
+                </div>}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div className="accessory-lifts">
         <div className="accessories-container">
@@ -247,7 +249,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
           <h4>Add accessories</h4>
           {editMode ? <EditExercise exercise={passExercise} saveChanges={saveChanges} /> : null}
           <AccessoryList accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
-          <button onClick={() => setCreating(prev => !prev)}>Create new</button>
+          <button onClick={() => setCreating(prev => !prev)} style={{ marginBottom: "3.5%" }}>Create new</button>
           {creating && <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />}
         </div>
       </div>

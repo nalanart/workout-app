@@ -1,26 +1,28 @@
 div.NewAccessory {
-
+  margin-bottom: 4%;
 }
 
 form.form-new-accessory {
-  margin-left: 5%;
+  display: flex;
+  flex-direction: column;  
 }
 
-.form-new-accessory input {
-  padding: 5px;
-  margin-right: 5%;
-  margin-bottom: 20px;
-}
-
-.form-reps-and-sets p {
+.input-reps p,
+div.input-name,
+div.input-type,
+div.select-sets,
+div.input-reps {
   display: inline;
-  margin-left: 5%;
 }
 
-.NewAccessory h4 {
-  padding-left: 3%;
+div.input-name,
+div.select-sets,
+.input-reps input
+ {
+  margin-right: 15px;
 }
 
-.form-new-accessory button {
-  padding: 5px;
+div.form-name-and-type,
+div.form-reps-and-sets {
+  margin-bottom: 2%;
 }
