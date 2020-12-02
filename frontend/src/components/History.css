@@ -1,0 +1,10 @@
+div.History-container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+div.workouts-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}

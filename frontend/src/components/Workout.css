@@ -1,3 +1,8 @@
 td p {
   display: inline;
 }
+
+div.Workout-container {
+  width: 70%;
+  margin: auto;
+}

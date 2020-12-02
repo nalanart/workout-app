@@ -1,4 +1,9 @@
 div.CompletedWorkout {
   border: solid black 1px;
-  border-radius: 10px;
+  width: 25%;
+  margin-bottom: 5%;
+}
+
+p.date {
+  background-color: rgb(255, 230, 230);
 }

@@ -115,7 +115,7 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
     const mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0
     const yyyy = today.getFullYear()
     today = `${mm}/${dd}/${yyyy}`
-
+    console.log(today)
     setCompletedWorkout({
       date: today,
       day: workout.mains[0].day,
@@ -130,7 +130,7 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
   }
 
   return ( 
-    <div className="Workout">
+    <div className="Workout-container">
       <h1>Today's Date</h1>
       <table>
         <thead>
@@ -151,19 +151,19 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
                 {exercise[session].setsAmrap && <p>, {exercise[session].setsAmrap}x{exercise[session].repsAmrap}+ </p>}
                 <p> {exercise.name} @ {exercise.weight ? exercise.weight : 0} lbs</p>
               </td>
-              <td>
+              <td className="reps">
                 <input type="number" onChange={e => handleChange1(e, exercise)} disabled={exercise !== currentExercise.current} />
               </td>
-              <td>
+              <td className="reps">
                 <input type="number" onChange={e => handleChange2(e, 2)} disabled={exercise !== currentExercise.current} />
               </td>
-              <td>
+              <td className="reps">
                 <input type="number" onChange={e => handleChange2(e, 3)} disabled={exercise !== currentExercise.current} />
               </td>
-              <td>
+              <td className="reps">
                 <input type="number" onChange={e => handleChange2(e, 4)} disabled={exercise !== currentExercise.current || exercise.sessionOne.setsRegular < 4} />
               </td>
-              <td>
+              <td className="reps">
                 <input type="number" onChange={e => handleChange2(e, 5)} 
                                      disabled={exercise !== currentExercise.current || exercise.sessionOne.setsRegular + exercise.sessionOne.setsAmrap < 5} />
               </td>
