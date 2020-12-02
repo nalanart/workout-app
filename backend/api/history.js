@@ -29,8 +29,12 @@ historyRouter.get('/', async (req, res) => {
     { useNewUrlParser: true, useUnifiedTopology: true })
 
     if(!day) {
-      const completedWorkouts = await CompletedWorkout.find({})
-      res.json(completedWorkouts)
+      const completedWorkouts = await CompletedWorkout.find({}).sort({ 'date': -1 }).limit(Number(req.query.limit)).exec()
+      if(completedWorkouts) {
+        res.json(completedWorkouts)
+      } else {
+        res.sendStatus(404)
+      }
     } else {
       const latestWorkoutOfTypeDay = await CompletedWorkout.findOne({ day: day }).exec()
       if(latestWorkoutOfTypeDay) {

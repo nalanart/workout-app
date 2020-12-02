@@ -6,18 +6,13 @@ const axios = require('axios')
 
 function History() {
 
+  const [limit, setLimit] = useState(6)
   const [workoutHistory, setWorkoutHistory] = useState([])
 
   useEffect(() => {
     async function fetchData() {
-      const res = await axios.get('/history')
+      const res = await axios.get(`/history?limit=${limit}`)
       setWorkoutHistory(res.data)
-      let today = new Date()
-      const dd = String(today.getDate()).padStart(2, '0')
-      const mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0
-      const yyyy = today.getFullYear()
-      today = `${mm}/${dd}/${yyyy}`
-      console.log(today)
     }
 
     try{
@@ -26,7 +21,7 @@ function History() {
       throw error
     }
     
-  }, [])
+  }, [limit])
 
   if(!workoutHistory) {
     return <p>Loading...</p>
@@ -34,10 +29,11 @@ function History() {
 
   return (
     <div className="History-container">
-      <h2>Workout History</h2>
+      <h1>Workout History</h1>
       <div className="workouts-container">
-        {workoutHistory.map(workout => <CompletedWorkout key={workout._id} workout={workout} />).sort((a, b) => a.date - b.date)}
+        {workoutHistory.map(workout => <CompletedWorkout key={workout._id} workout={workout} />)}
       </div>
+      <button className="button-load-more" onClick={() => setLimit(prev => prev + 6)}>Load more</button>
     </div>
   )
 }

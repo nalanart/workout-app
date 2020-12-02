@@ -115,7 +115,6 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
     const mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0
     const yyyy = today.getFullYear()
     today = `${mm}/${dd}/${yyyy}`
-    console.log(today)
     setCompletedWorkout({
       date: today,
       day: workout.mains[0].day,
