@@ -40,7 +40,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
   useEffect(() => {
     axios.get(`/exercises?day=${day}&liftType=main`)
       .then(res => {
-        setMains(res.data.filter(exercise => exercise[session].repsRegular))
+        setMains(res.data.filter(exercise => exercise[session].repsRegular !== '0'))
       })
       .catch(error => {
         throw error
@@ -182,7 +182,12 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
   }
 // ------------------------------ EDIT EXERCISE ------------------------------
   const editExercise = exercise => {
-    setEditMode(true)
+    setEditMode(prev => {
+      if(exercise !== passExercise) {
+        return true
+      }
+      return !prev
+    })
     setPassExercise(exercise)
   }
 
@@ -246,8 +251,8 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
               </li>
             ))}
           </ul>
+          {editMode && <EditExercise exercise={passExercise} saveChanges={saveChanges} />}
           <h4>Add accessories</h4>
-          {editMode ? <EditExercise exercise={passExercise} saveChanges={saveChanges} /> : null}
           <AccessoryList accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
           <button onClick={() => setCreating(prev => !prev)} style={{ marginBottom: "3.5%" }}>Create new</button>
           {creating && <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />}

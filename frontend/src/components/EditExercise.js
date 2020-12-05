@@ -61,14 +61,14 @@ function EditExercise({ exercise, saveChanges }) {
 
   return (
     <div className="EditExercise">
-      <p>Edit Exercise</p>
+      <h3>Edit Exercise</h3>
       <form className="form-edit-exercise">
         <input value={exerciseEdit.name} onChange={handleChange} />
         <label for="sets">Sets:</label>
         <select id="sets" name="sets" onChange={handleSelect}>
-          <option value='3'>3</option>
-          <option value='4'>4</option>
-          <option value='5'>5</option>
+          <option value='3' selected={exercise.sessionOne.setsRegular === "3"}>3</option>
+          <option value='4' selected={exercise.sessionOne.setsRegular === "4"}>4</option>
+          <option value='5' selected={exercise.sessionOne.setsRegular === "5"}>5</option>
         </select>
         <div className="form-reps">
           <p>Reps:</p>

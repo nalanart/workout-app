@@ -1,17 +1,16 @@
 .EditExercise {
   position: absolute;
-  background-color: rgb(211, 222, 247);
-  padding: 20px;
-  border: 1px solid rgb(0,0,0)
+  background-color: rgb(255, 255, 255);
+  padding-bottom: 2%;
+  padding-left: 2%;
+  padding-right: 2%;
+  border: 1px solid rgb(196, 196, 196);
+  right: 40%;
+  bottom: 20%;
 }
 
 .EditExercise p {
-  margin-top: 0;
-  margin-bottom: 5%;
-}
-
-.form-reps p {
-  margin: 0;
+  display: inline;
 }
 
 form.form-edit-exercise {
@@ -19,10 +18,11 @@ form.form-edit-exercise {
   flex-direction: column;
 }
 
-.form-edit-exercise button {
-  float: right;
-}
-
 .form-edit-exercise select {
   width: 20%;
+}
+
+.form-edit-exercise input,
+.form-edit-exercise select {
+  margin-bottom: 5%;
 }

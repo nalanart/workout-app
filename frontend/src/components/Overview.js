@@ -11,7 +11,6 @@ function Overview({ day, handleSkip }) {
   useEffect(() => {
     async function getLatestWorkout() {
       const res = await axios.get(`/history?day=${day}`)
-      console.log(res)
       setLatestWorkout(res.data)
     }
 
@@ -20,7 +19,7 @@ function Overview({ day, handleSkip }) {
     } catch(error) {
       throw error
     }
-  }, [])
+  }, [day])
 
   if(!latestWorkout) {
     return (

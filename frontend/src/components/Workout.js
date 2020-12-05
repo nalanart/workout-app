@@ -2,6 +2,12 @@ import axios from 'axios'
 import { useState, useEffect, useRef } from 'react'
 import './Workout.css'
 
+let today = new Date()
+const dd = String(today.getDate()).padStart(2, '0')
+const mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0
+const yyyy = today.getFullYear()
+today = `${mm}/${dd}/${yyyy}`
+
 function Workout({ workout, session, goNextDay, failedExercise }) {
   const [completedExercise, setCompletedExercise] = useState({
     reps: []
@@ -110,11 +116,6 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
   const postWorkout = () => {
     initialPost.current = true
 
-    let today = new Date()
-    const dd = String(today.getDate()).padStart(2, '0')
-    const mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0
-    const yyyy = today.getFullYear()
-    today = `${mm}/${dd}/${yyyy}`
     setCompletedWorkout({
       date: today,
       day: workout.mains[0].day,
@@ -130,7 +131,7 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
 
   return ( 
     <div className="Workout-container">
-      <h1>Today's Date</h1>
+      <h1>Today's Date: {today}</h1>
       <table>
         <thead>
           <tr>
@@ -164,7 +165,7 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
               </td>
               <td className="reps">
                 <input type="number" onChange={e => handleChange2(e, 5)} 
-                                     disabled={exercise !== currentExercise.current || exercise.sessionOne.setsRegular + exercise.sessionOne.setsAmrap < 5} />
+                                     disabled={exercise !== currentExercise.current || exercise.sessionOne.setsRegular < 5} />
               </td>
               <button onClick={() => handleSubmit(index)} disabled={exercise !== currentExercise.current}>Done</button>
             </tr>
