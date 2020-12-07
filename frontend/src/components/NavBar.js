@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 function NavBar() {
   return (
-    <nav className="NavBar">
+    <nav className="NavBar bg-light">
       <ul className="nav justify-content-center">
         <li className="nav-item">
           <Link to="/overview" className="nav-link">

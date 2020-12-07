@@ -22,7 +22,8 @@ function App() {
     mains: [],
     accessories: []
   })
-
+  const [showAlert, setShowAlert] = useState(false)
+  
   useEffect(() => {
     setDay(ls.get('day') || 0)
     setCurrentWorkout(ls.get('currentWorkout') || {mains: [], accessories: []})
@@ -57,6 +58,7 @@ function App() {
       mains: mains,
       accessories: accessories
     })
+    setShowAlert(true)
   }
 
   const goNextDay = () => {
@@ -71,8 +73,14 @@ function App() {
 
   return (
     <div className="App">
+      {showAlert && <div className="alert alert-success alert-dismissable" role="alert">
+                      Your workout has been created! View it in the 'Current Workout' tab.
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>}
       <Router>
-        <div className="logo-container">
+        <div className="logo-container bg-light">
           <img src="https://www.flaticon.com/svg/static/icons/svg/249/249187.svg" alt="dumbbell" height="70" />
           <h1 className="app-name">&nbsp;Workout App</h1>
         </div>

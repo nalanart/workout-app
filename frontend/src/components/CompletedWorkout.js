@@ -7,6 +7,7 @@ function CompletedWorkout({ workout }) {
       <div className="card-body">
         <h5 className="card-title date">Date: {workout.date}</h5>
         <h6 className="card-subtitle text-muted">Day: {workout.day}</h6>
+        <hr></hr>
         {workout.exercises.map(exercise => <Exercise key={exercise._id} exercise={exercise} />)}
       </div>
     </div>

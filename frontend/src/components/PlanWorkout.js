@@ -3,7 +3,6 @@ import AccessoryList from './AccessoryList'
 import NewAccessory from './NewAccessory'
 import EditExercise from './EditExercise'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 import './PlanWorkout.css'
 
 function PlanWorkout({ day, session, handleClick, failedExercise }) {
@@ -260,9 +259,6 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
       <button className="save-workout" onClick={() => handleClick(mains, accessories)}>
         Save Workout
       </button>
-      <Link to='/workout'>
-        View Workout
-      </Link>
     </div>
   )
 }

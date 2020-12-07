@@ -14,3 +14,7 @@ nav.NavBar {
   width: 60%;
   margin: auto;
 } */
+
+nav {
+  margin-bottom: 3rem;
+}
