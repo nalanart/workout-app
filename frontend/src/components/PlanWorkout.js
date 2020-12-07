@@ -199,7 +199,6 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
 
   return (
     <div className="PlanWorkout-container">
-      <h2 className="page-name">PLAN YOUR WORKOUT</h2>
       <h3>{day.toUpperCase()} DAY</h3>
       <div className="main-lifts">
         <div className="main-lifts-container">
@@ -228,7 +227,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
       </div>
       <div className="accessory-lifts">
         <div className="accessories-container">
-          <h3>Accessories</h3>
+          <h3 className="section-name">Accessories</h3>
           <ul className="accessory-lifts-ul">
             {accessories.map((accessory, index) => (
               <li key={index}>

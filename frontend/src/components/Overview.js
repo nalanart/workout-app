@@ -44,7 +44,7 @@ function Overview({ day, handleSkip }) {
       <div className="non-rest-day">
         <p>Today you're doing {day}.</p>
         <hr></hr>
-        <h4>Last time you did {day}:</h4>
+        <h4>The last time you did {day}:</h4>
         <CompletedWorkout workout={latestWorkout}/>
         <button className="btn btn-sm btn-info" onClick={handleSkip}>Skip</button>
       </div>

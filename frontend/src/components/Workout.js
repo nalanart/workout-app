@@ -141,6 +141,7 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
             <th className="set-number">3</th>
             <th className="set-number">4</th>
             <th className="set-number">5</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
