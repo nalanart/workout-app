@@ -1,9 +1,8 @@
 div.CompletedWorkout {
-  border: solid black 1px;
-  width: 25%;
+  width: 30%;
   margin-bottom: 5%;
 }
 
-p.date {
-  background-color: rgb(255, 230, 230);
+h6.card-subtitle {
+  margin-bottom: 1rem;
 }

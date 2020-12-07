@@ -6,3 +6,16 @@ div.Workout-container {
   width: 80%;
   margin: 0 auto;
 }
+
+th {
+  text-align: center;
+}
+
+th h5 {
+  margin-bottom: 0;
+}
+
+/* th.set-number,
+ {
+
+} */

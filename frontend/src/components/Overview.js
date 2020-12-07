@@ -24,6 +24,8 @@ function Overview({ day, handleSkip }) {
   if(!latestWorkout) {
     return (
       <div className="Overview-container">
+        <h1>Hi Alan,</h1>
+        <h2>Today you're doing {day}</h2>
         <p>You don't have any previously completed {day} workouts! GET TO WORK!!!!!!!!!!!</p>
         <button onClick={handleSkip}>Skip</button>
       </div>
@@ -31,18 +33,20 @@ function Overview({ day, handleSkip }) {
   }
 
   return (
-    <div className="Overview-container">
+    <div className="Overview-container jumbotron">
+      <h1>Hi Alan,</h1>
       {day === 'rest' ? (
       <div className="rest-day">
-        <p>Good job on your workouts! Rest up today!</p>
+        <h2>Today is your rest day</h2>
+        <p>Good job on your workouts!</p>
         <button onClick={handleSkip}>Rest is for the weak</button>
       </div>) : (
       <div className="non-rest-day">
-        <h1>Hi Alan,</h1>
-        <h2>Today you're doing {day}</h2>
-        <button onClick={handleSkip}>Skip</button>
-        <h3>Last time you did {day}:</h3>
+        <p>Today you're doing {day}.</p>
+        <hr></hr>
+        <h4>Last time you did {day}:</h4>
         <CompletedWorkout workout={latestWorkout}/>
+        <button className="btn btn-sm btn-info" onClick={handleSkip}>Skip</button>
       </div>
       )}
     </div>

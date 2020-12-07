@@ -1,8 +1,10 @@
+import './Exercise.css'
+
 function Exercise({ exercise }) {
   return (
     <div className="Exercise">
-      <p>{exercise.name} @ {exercise.weight} lbs</p>
-      <p>Sets: {exercise.reps.join('-')}</p>
+      <p className="card-text">{exercise.name} @ {exercise.weight} lbs</p>
+      <p className="card-text">Sets: {exercise.reps.join('-')}</p>
     </div>
   )
 }

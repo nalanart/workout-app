@@ -1,30 +1,31 @@
 import './NavBar.css'
 import { Link } from 'react-router-dom'
 
+
 function NavBar() {
   return (
     <nav className="NavBar">
-      <ul className="links">
-        <Link to="/overview" style={{ textDecoration: 'none' }}>
-          <li>
+      <ul className="nav justify-content-center">
+        <li className="nav-item">
+          <Link to="/overview" className="nav-link">
             Overview
-          </li>
-        </Link>
-        <Link to="/plan" style={{ textDecoration: 'none' }}>
-          <li>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/plan" className="nav-link">
             Plan
-          </li>
-        </Link>
-        <Link to="/workout" style={{ textDecoration: 'none' }}>
-          <li>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/workout" className="nav-link">
             Current Workout
-          </li>
-        </Link>
-        <Link to="/history" style={{ textDecoration: 'none' }}>
-          <li>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/history" className="nav-link">
             History
-          </li>
-        </Link>
+          </Link>
+        </li>
       </ul>
     </nav>
   )

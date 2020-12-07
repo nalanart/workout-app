@@ -131,11 +131,11 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
 
   return ( 
     <div className="Workout-container">
-      <h1>Today's Date: {today}</h1>
-      <table>
+      <h2>Today's Date: {today}</h2>
+      <table className="table">
         <thead>
           <tr>
-            <th>Exercise</th>
+            <th><h5>Exercise</h5></th>
             <th className="set-number">1</th>
             <th className="set-number">2</th>
             <th className="set-number">3</th>
@@ -172,7 +172,7 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
           ))}
         </tbody>
       </table>
-      <button onClick={postWorkout}>Finish Workout</button>
+      <button className="btn btn-success" onClick={postWorkout}>Finish Workout</button>
     </div>
   )
 }

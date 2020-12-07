@@ -1,12 +1,8 @@
-ul.links {
+/* ul.links {
   padding: 0;
   display: flex;
   justify-content: space-around;
   list-style: none;
-}
-
-.links li {
-
 }
 
 .links li:hover {
@@ -17,4 +13,4 @@ nav.NavBar {
   border-bottom: 1px solid rgb(243, 240, 240);
   width: 60%;
   margin: auto;
-}
+} */
