@@ -58,7 +58,6 @@ function App() {
       mains: mains,
       accessories: accessories
     })
-    setShowAlert(true)
   }
 
   const goNextDay = () => {
@@ -73,12 +72,12 @@ function App() {
 
   return (
     <div className="App">
-      {showAlert && <div className="alert alert-success alert-dismissable" role="alert">
+      {/* {showAlert && <div className="alert alert-success alert-dismissable" role="alert">
                       Your workout has been created! View it in the 'Current Workout' tab.
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
-                    </div>}
+                    </div>} */}
       <Router>
         <div className="logo-container bg-light">
           <img src="https://www.flaticon.com/svg/static/icons/svg/249/249187.svg" alt="dumbbell" height="70" />

@@ -1,6 +1,6 @@
 import './NewAccessory.css'
 
-function NewAccessory({ handleNameChange, handleSubmit, handleSelect, newAccessory }) {
+function NewAccessory({ handleNameChange, handleSubmit, handleSelect, newAccessory, createNew }) {
   return (
     <div className="NewAccessory">
       <h4>Create new accessory</h4>

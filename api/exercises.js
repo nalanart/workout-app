@@ -28,7 +28,7 @@ exercisesRouter.get('/', async (req, res) => {
 
     const exercises = await Exercise.find({ day: req.query.day, liftType: req.query.liftType }).exec()
 
-    if(exercises === null) {
+    if(!exercises.length) {
       res.sendStatus(404)
     } else {
       res.send(exercises)
@@ -78,6 +78,21 @@ exercisesRouter.put('/:exerciseId', async (req, res) => {
 
     res.sendStatus(204)
 
+  } catch(error) {
+    throw error
+  }
+})
+
+exercisesRouter.delete('/:exerciseId', async(req, res) => {
+  try {
+    await mongoose.connect('mongodb+srv://nalanart:ttyDPj9vx2sDNJqn@cluster0.2iplh.mongodb.net/workout-app-db?retryWrites=true&w=majority', 
+    { useNewUrlParser: true, useUnifiedTopology: true })
+    const removedExercise = await Exercise.findByIdAndDelete(req.params.exerciseId)
+    if(removedExercise) {
+      return res.sendStatus(204)
+    } else {
+      res.sendStatus(404)
+    }
   } catch(error) {
     throw error
   }

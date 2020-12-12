@@ -3,7 +3,7 @@ import './EditExercise.css'
 const axios = require('axios')
 
 
-function EditExercise({ exercise, saveChanges }) {
+function EditExercise({ exercise, saveChanges, deleteExercise }) {
 
   const [exerciseEdit, setExerciseEdit] = useState({})
 
@@ -82,6 +82,7 @@ function EditExercise({ exercise, saveChanges }) {
           <input type="number" placeholder={exercise.weight} value={exerciseEdit.weight} min="0" step="2.5" onChange={handleWeight} disabled={!exercise.weight}/>
         </div>
         <button onClick={() => saveChanges(exerciseEdit)}>Save</button>
+        <button onClick={() => deleteExercise(exerciseEdit._id)}>Delete</button>
       </form>
     </div>
   )

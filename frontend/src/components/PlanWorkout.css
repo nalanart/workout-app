@@ -48,3 +48,9 @@ button.save-workout {
 .section-name {
   margin-top: 1rem;
 }
+
+.alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+}

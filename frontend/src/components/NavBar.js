@@ -1,11 +1,10 @@
 import './NavBar.css'
 import { Link } from 'react-router-dom'
 
-
 function NavBar() {
   return (
     <nav className="NavBar bg-light">
-      <ul className="nav justify-content-center">
+      <ul className="nav justify-content-center nav-tabs">
         <li className="nav-item">
           <Link to="/overview" className="nav-link">
             Overview

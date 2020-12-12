@@ -33,6 +33,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
   const [weight, setWeight] = useState(0)
   const [passExercise, setPassExercise] = useState({})
   const [creating, setCreating] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
 
   const initialPut = useRef(false)
 
@@ -178,6 +179,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
       },
       weight: 0,
     })
+    setCreating(false)
   }
 // ------------------------------ EDIT EXERCISE ------------------------------
   const editExercise = exercise => {
@@ -194,6 +196,10 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
     initialPut.current = true
     setExerciseToEdit(editedExercise)
     setEditMode(false)
+  }
+
+  const deleteExercise = async id => {
+    await axios.delete(`/exercises/${id}`)
   }
 
   return (
@@ -249,16 +255,25 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
               </li>
             ))}
           </ul>
-          {editMode && <EditExercise exercise={passExercise} saveChanges={saveChanges} />}
+          {editMode && <EditExercise exercise={passExercise} saveChanges={saveChanges} deleteExercise={deleteExercise} />}
           <h4>Add accessories</h4>
           <AccessoryList accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
-          <button onClick={() => setCreating(prev => !prev)} style={{ marginBottom: "3.5%" }}>Create new</button>
+          {!creating && <button onClick={() => setCreating(prev => !prev)} style={{ marginBottom: "3.5%" }}>Create new</button>}
           {creating && <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />}
         </div>
       </div>
-      <button className="save-workout" onClick={() => handleClick(mains, accessories)}>
+      <button className="save-workout" onClick={() => {
+        handleClick(mains, accessories)
+        setShowAlert(true)
+        }}>
         Save Workout
       </button>
+      {showAlert && <div className="alert alert-success alert-dismissable" role="alert">
+                      Your workout has been created! View it in the 'Current Workout' tab.
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>}
     </div>
   )
 }
