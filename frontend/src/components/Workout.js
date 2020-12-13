@@ -136,11 +136,11 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
         <thead>
           <tr>
             <th><h5>Exercise</h5></th>
-            <th className="set-number">1</th>
-            <th className="set-number">2</th>
-            <th className="set-number">3</th>
-            <th className="set-number">4</th>
-            <th className="set-number">5</th>
+            <th className="set-number">Set 1</th>
+            <th className="set-number">Set 2</th>
+            <th className="set-number">Set 3</th>
+            <th className="set-number">Set 4</th>
+            <th className="set-number">Set 5</th>
             <th></th>
           </tr>
         </thead>
