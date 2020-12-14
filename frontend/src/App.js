@@ -6,6 +6,8 @@ import PlanWorkout from './components/PlanWorkout'
 import Workout from './components/Workout'
 import History from './components/History'
 import Overview from './components/Overview'
+import Register from './components/Register'
+import Login from './components/Login'
 
 import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
@@ -22,7 +24,6 @@ function App() {
     mains: [],
     accessories: []
   })
-  const [showAlert, setShowAlert] = useState(false)
   
   useEffect(() => {
     setDay(ls.get('day') || 0)
@@ -72,12 +73,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* {showAlert && <div className="alert alert-success alert-dismissable" role="alert">
-                      Your workout has been created! View it in the 'Current Workout' tab.
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>} */}
       <Router>
         <div className="logo-container bg-light">
           <img src="https://www.flaticon.com/svg/static/icons/svg/249/249187.svg" alt="dumbbell" height="70" />
@@ -90,6 +85,8 @@ function App() {
           <Route path="/plan" render={props => <PlanWorkout {...props} day={schedule[day]} session={session} handleClick={handleClick} failedExercise={failedExercise} />} />
           <Route path="/workout" render={props => <Workout {...props} workout={currentWorkout} session={session} goNextDay={goNextDay} failedExercise={failedExercise} />} />
           <Route path="/history" component={History} />
+          <Route path="/register" component={Register} />
+          <Route path="/login" component={Login} />
         </Switch>
       </Router>
     </div>

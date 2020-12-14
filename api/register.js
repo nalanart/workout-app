@@ -1,11 +1,8 @@
 const registerRouter = require('express').Router()
-const mongoose = require('mongoose')
 const User = require('../models/User')
-const dotenv = require('dotenv')
 const { registerValidation } = require('../validation')
 const bcrypt = require('bcrypt')
-
-dotenv.config()
+const createStartingExercises = require('../migration')
 
 registerRouter.post('/', async (req, res) => {
   // Validate submitted registration form
@@ -14,7 +11,6 @@ registerRouter.post('/', async (req, res) => {
     return res.status(400).send(error.details[0].message)
   }
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
     // Check if email exists already
     const user = await User.findOne({ email: req.body.email })
     if(user) {
@@ -29,7 +25,9 @@ registerRouter.post('/', async (req, res) => {
       password: hashedPassword
     })
     const savedUser = await newUser.save()
-    res.send({ user: savedUser._id})
+    res.send(savedUser)
+    createStartingExercises(savedUser._id)
+
   } catch(error) {
     res.sendStatus(500)
   }

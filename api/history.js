@@ -1,13 +1,9 @@
 const historyRouter = require('express').Router()
-const mongoose = require('mongoose')
 const CompletedWorkout = require('../models/CompletedWorkout')
-const dotenv = require('dotenv')
-
-dotenv.config()
+const authenticateToken = require('../authToken')
 
 historyRouter.param('completedId', async (req, res, next, completedId) => {
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
     const completedWorkout = await Workout.findById(completedId).exec()
     if(Object.keys(workout).length === 0) {
       res.sendStatus(404)
@@ -20,20 +16,20 @@ historyRouter.param('completedId', async (req, res, next, completedId) => {
   }
 })
 
-historyRouter.get('/', async (req, res) => {
+historyRouter.get('/', authenticateToken, async (req, res) => {
   let day = req.query.day
 
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
     if(!day) {
       const completedWorkouts = await CompletedWorkout.find({}).sort({ 'date': -1 }).limit(Number(req.query.limit)).exec()
-      if(completedWorkouts) {
-        res.json(completedWorkouts)
+      if(completedWorkouts.length) {
+        res.json(completedWorkouts.filter(workout => workout.userId === req.user._id))
       } else {
         res.sendStatus(404)
       }
     } else {
-      const latestWorkoutOfTypeDay = await CompletedWorkout.findOne({ day: day }).exec()
+      const latestWorkoutOfTypeDay = await CompletedWorkout.findOne({ day: day, userId: req.user._id }).exec()
+      console.log(latestWorkoutOfTypeDay)
       if(latestWorkoutOfTypeDay) {
         res.json(latestWorkoutOfTypeDay)
       } else {
@@ -45,10 +41,10 @@ historyRouter.get('/', async (req, res) => {
   }
 })
 
-historyRouter.post('/', async (req, res) => {
+historyRouter.post('/', authenticateToken, async (req, res) => {
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
     const completedWorkout = await CompletedWorkout.create({
+      userId: req.user._id,
       date: req.body.date,
       day: req.body.day,
       exercises: req.body.exercises

@@ -1,13 +1,9 @@
 const exercisesRouter = require('express').Router()
-const mongoose = require('mongoose')
 const Exercise = require('../models/Exercise')
-const dotenv = require('dotenv')
-
-dotenv.config()
+const authenticateToken = require('../authToken')
 
 exercisesRouter.param('exerciseId', async (req, res, next, exerciseId) => {
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
     const exercise = await Exercise.findById(exerciseId).exec()
     if(exercise === null) {
       res.sendStatus(404)
@@ -20,24 +16,24 @@ exercisesRouter.param('exerciseId', async (req, res, next, exerciseId) => {
   }
 })
 
-exercisesRouter.get('/', async (req, res) => {
+exercisesRouter.get('/', authenticateToken, async (req, res) => {
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
+    console.log(req.user)
     const exercises = await Exercise.find({ day: req.query.day, liftType: req.query.liftType }).exec()
     if(!exercises.length) {
       res.sendStatus(404)
     } else {
-      res.send(exercises)
+      res.send(exercises.filter(exercise => exercise.userId === req.user._id))
     }
   } catch(error) {
     throw error
   }
 })
 
-exercisesRouter.post('/', async (req, res) => {
+exercisesRouter.post('/', authenticateToken, async (req, res) => {
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
     await Exercise.create({
+      userId: req.user._id,
       name: req.body.name,
       day: req.body.day,
       liftType: req.body.liftType,
@@ -56,7 +52,6 @@ exercisesRouter.get('/:exerciseId', (req, res) => {
 
 exercisesRouter.put('/:exerciseId', async (req, res) => {
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
     await Exercise.findByIdAndUpdate(req.params.exerciseId, {
       name: req.body.name,
       sessionOne: req.body.sessionOne,
@@ -73,7 +68,6 @@ exercisesRouter.put('/:exerciseId', async (req, res) => {
 
 exercisesRouter.delete('/:exerciseId', async(req, res) => {
   try {
-    await mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
     const removedExercise = await Exercise.findByIdAndDelete(req.params.exerciseId)
     if(removedExercise) {
       return res.sendStatus(204)

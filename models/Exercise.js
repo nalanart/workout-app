@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const exerciseSchema = new mongoose.Schema({
+  userId: {type: String, required: true},
   name: {type: String, required: true},
   day: {type: String, required: true},
   liftType: {type: String, default: 'accessory'},

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
 function NavBar() {
-  const [page, setPage] = useState('overview')
+  const [page, setPage] = useState('')
 
   const getPageClass = pageOption => pageOption === page ? 'nav-link active' : 'nav-link'
 

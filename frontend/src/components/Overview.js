@@ -7,12 +7,20 @@ import './Overview.css'
 function Overview({ day, handleSkip }) {
 
   const [latestWorkout, setLatestWorkout] = useState()
+  const [name, setName] = useState('')
 
   useEffect(() => {
     async function getLatestWorkout() {
-      const res = await axios.get(`/history?day=${day}`)
-      setLatestWorkout(res.data)
-    }
+      const res = await axios.get(`/users/5fd6bbff587cb519fc844ddb`)
+      setName(res.data.firstName)
+
+      const res2 = await axios.get(`/history?day=${day}`, {
+        headers: {
+          'Authorization': localStorage.getItem('accessToken')
+        }
+      })
+      setLatestWorkout(res2.data)
+    } 
 
     try {
       getLatestWorkout()
@@ -24,7 +32,7 @@ function Overview({ day, handleSkip }) {
   if(!latestWorkout) {
     return (
       <div className="Overview-container">
-        <h1>Hi Alan,</h1>
+        <h1>Hi {name},</h1>
         <h2>Today you're doing {day}</h2>
         <p>You don't have any previously completed {day} workouts! GET TO WORK!!!!!!!!!!!</p>
         <button onClick={handleSkip}>Skip</button>
@@ -34,7 +42,7 @@ function Overview({ day, handleSkip }) {
 
   return (
     <div className="Overview-container jumbotron">
-      <h1>Hi Alan,</h1>
+      <h1>Hi {name}},</h1>
       {day === 'rest' ? (
       <div className="rest-day">
         <h2>Today is your rest day</h2>

@@ -38,7 +38,11 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
   const initialPut = useRef(false)
 
   useEffect(() => {
-    axios.get(`/exercises?day=${day}&liftType=main`)
+    axios.get(`/exercises?day=${day}&liftType=main`, {
+      headers: {
+        'Authorization': localStorage.getItem('accessToken')
+      }
+    })
       .then(res => {
         setMains(res.data.filter(exercise => exercise[session].repsRegular !== '0'))
       })
@@ -46,7 +50,11 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
         throw error
       })
 
-    axios.get(`/exercises?day=${day}&liftType=accessory`)
+    axios.get(`/exercises?day=${day}&liftType=accessory`, {
+      headers: {
+      'Authorization': localStorage.getItem('accessToken')
+      }
+    })
       .then(res => {
         setAccessoryList(res.data)
       })
