@@ -45,8 +45,8 @@ function App() {
     ls.set('currentWorkout', currentWorkout)
   }, [currentWorkout])
 
-  const toggleLogin = () => {
-    setLoggedIn(!loggedIn)
+  const login = () => {
+    setLoggedIn(true)
   }
 
   const logout = () => {
@@ -94,7 +94,7 @@ function App() {
           <Route path="/workout" render={props => <Workout {...props} workout={currentWorkout} session={session} goNextDay={goNextDay} failedExercise={failedExercise} />} />
           <Route path="/history" component={History} />
           <Route path="/register" component={Register} />
-          <Route path="/login" render={props => <Login {...props} toggleLogin={toggleLogin} />} />
+          <Route path="/login" render={props => <Login {...props} login={login} />} />
         </Switch>
       </Router>
     </div>

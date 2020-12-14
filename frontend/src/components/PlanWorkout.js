@@ -44,7 +44,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
       }
     })
       .then(res => {
-        setMains(res.data.filter(exercise => exercise[session].repsRegular !== '0'))
+        setMains(res.data.filter(exercise => exercise[session].repsRegular !== ''))
       })
       .catch(error => {
         throw error

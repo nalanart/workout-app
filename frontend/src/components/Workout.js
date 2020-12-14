@@ -126,7 +126,7 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
   }
 
   if(Object.keys(workout).length === 0) {
-    return <p>Loading...</p>
+    return <p>No workout planned yet</p>
   }
 
   return ( 

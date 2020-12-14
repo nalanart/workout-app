@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Link, Redirect, useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 const axios = require('axios')
 
-function Login({ toggleLogin }) {
+function Login({ login }) {
   let history = useHistory()
   const [user, setUser] = useState({
     email: '',
@@ -23,10 +23,9 @@ function Login({ toggleLogin }) {
     axios
       .post('/login', user)
       .then(res => {
+        login()
         const jwt = res.data.accessToken
-        const userId = res.data.userId
         localStorage.setItem('accessToken', 'Bearer ' + jwt)
-        localStorage.setItem('userId', userId)
         history.push('/overview')
       })
       .catch(err => {
@@ -48,7 +47,7 @@ function Login({ toggleLogin }) {
         </div>
         <div className="form-group">
           <div className="col-sm-10">
-            <button className="btn btn-primary" type="submit" onClick={toggleLogin}>Log in</button>
+            <button className="btn btn-primary" type="submit">Log in</button>
           </div>
         </div>
         {message && message}
