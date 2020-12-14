@@ -10,8 +10,7 @@ div.logo-container {
   padding-bottom: 2%;
 }
 
-.logo-container img:hover,
-.logo-container h1:hover {
+.logo-container img:hover {
   cursor: pointer;
 }
 

@@ -17,7 +17,7 @@ import ls from 'local-storage'
 const schedule = ['push', 'pull', 'legs', 'rest', 'push', 'pull', 'legs']
 
 function App() {
-
+  const [loggedIn, setLoggedIn] = useState(false)
   const [day, setDay] = useState(0)
   const [session, setSession] = useState('sessionOne')
   const [currentWorkout, setCurrentWorkout] = useState({
@@ -44,6 +44,14 @@ function App() {
   useEffect(() => {
     ls.set('currentWorkout', currentWorkout)
   }, [currentWorkout])
+
+  const toggleLogin = () => {
+    setLoggedIn(!loggedIn)
+  }
+
+  const logout = () => {
+    setLoggedIn(false)
+  }
 
   const failedExercise = exercise => {
     for(let i = 0; i < exercise.reps.length; i++) {
@@ -75,10 +83,10 @@ function App() {
     <div className="App">
       <Router>
         <div className="logo-container bg-light">
-          <img src="https://www.flaticon.com/svg/static/icons/svg/249/249187.svg" alt="dumbbell" height="70" />
+          <Link to="/"><img src="https://www.flaticon.com/svg/static/icons/svg/249/249187.svg" alt="dumbbell" height="70"/></Link>
           <h1 className="app-name">&nbsp;Workout App</h1>
         </div>
-        <NavBar />
+        <NavBar loggedIn={loggedIn} logout={logout} />
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/overview" render={props => <Overview {...props} day={schedule[day]} handleSkip={goNextDay} />} />
@@ -86,7 +94,7 @@ function App() {
           <Route path="/workout" render={props => <Workout {...props} workout={currentWorkout} session={session} goNextDay={goNextDay} failedExercise={failedExercise} />} />
           <Route path="/history" component={History} />
           <Route path="/register" component={Register} />
-          <Route path="/login" component={Login} />
+          <Route path="/login" render={props => <Login {...props} toggleLogin={toggleLogin} />} />
         </Switch>
       </Router>
     </div>

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Redirect, useHistory } from 'react-router-dom'
+import { Link, Redirect, useHistory } from 'react-router-dom'
 const axios = require('axios')
 
-function Login() {
+function Login({ toggleLogin }) {
   let history = useHistory()
   const [user, setUser] = useState({
     email: '',
@@ -36,22 +36,27 @@ function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group col-md-3">
-        <label for="input-email">Email</label>
-        <input type="email" name="email" className="form-control" id="input-email" onChange={handleChange} />
-      </div>
-      <div className="form-group col-md-3">
-        <label for="input-password">Password</label>
-        <input type="password" name="password" className="form-control" id="input-password" onChange={handleChange} />
-      </div>
-      <div className="form-group">
-        <div className="col-sm-10">
-          <button className="btn btn-primary" type="submit">Log in</button>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group col-md-3">
+          <label for="input-email">Email</label>
+          <input type="email" name="email" className="form-control" id="input-email" onChange={handleChange} />
         </div>
+        <div className="form-group col-md-3">
+          <label for="input-password">Password</label>
+          <input type="password" name="password" className="form-control" id="input-password" onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <div className="col-sm-10">
+            <button className="btn btn-primary" type="submit" onClick={toggleLogin}>Log in</button>
+          </div>
+        </div>
+        {message && message}
+      </form>
+      <div className="col-sm-10">
+        Don't have an account? <Link to="/register">Create one now</Link>
       </div>
-      {message && message}
-    </form>
+    </div>
   )
 }
 
