@@ -37,6 +37,7 @@ function Login({ login }) {
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        <h2 className="form-group col-md-3">Log in</h2>
         <div className="form-group col-md-3">
           <label for="input-email">Email</label>
           <input type="email" name="email" className="form-control" id="input-email" onChange={handleChange} />

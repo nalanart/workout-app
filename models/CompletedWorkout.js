@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const completedWorkoutSchema = new mongoose.Schema({
+  userId: String,
   date: String,
   day: String,
   exercises: Array

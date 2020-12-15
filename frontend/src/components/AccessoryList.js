@@ -8,7 +8,7 @@ function AccessoryList({ accessoryList, addAccessory, accessories }) {
           accessories.includes(accessory) ? null : 
           <li className="accessory-list-li" key={accessory._id}>
             {accessory.name} 
-            <button onClick={() => addAccessory(accessory)}>Add</button>
+            <button className="btn btn-info" onClick={() => addAccessory(accessory)}>Add</button>
           </li>
         ))}
       </ul>

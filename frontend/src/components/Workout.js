@@ -8,6 +8,16 @@ const mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0
 const yyyy = today.getFullYear()
 today = `${mm}/${dd}/${yyyy}`
 
+const parseJwt = token => {
+  const base64Url = token.split('.')[1]
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  }).join(''))
+
+  return JSON.parse(jsonPayload)
+}
+
 function Workout({ workout, session, goNextDay, failedExercise }) {
   const [completedExercise, setCompletedExercise] = useState({
     reps: []
@@ -31,7 +41,11 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
 
   useEffect(() => {
     async function submitWorkout() {
-      await axios.post('/history', completedWorkout)
+      await axios.post('/history', completedWorkout, {
+        headers: {
+          'Authorization': localStorage.getItem('accessToken')
+        }
+      })
     }
 
     if(initialPost.current) {
@@ -115,8 +129,10 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
 
   const postWorkout = () => {
     initialPost.current = true
+    const user = parseJwt(localStorage.getItem('accessToken'))
 
     setCompletedWorkout({
+      userId: user._id,
       date: today,
       day: workout.mains[0].day,
       exercises: completedExercises
@@ -162,11 +178,11 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
                 <input type="number" onChange={e => handleChange2(e, 3)} disabled={exercise !== currentExercise.current} />
               </td>
               <td className="reps">
-                <input type="number" onChange={e => handleChange2(e, 4)} disabled={exercise !== currentExercise.current || exercise.sessionOne.setsRegular < 4} />
+                <input type="number" onChange={e => handleChange2(e, 4)} disabled={exercise !== currentExercise.current || exercise[session].setsRegular < 4} />
               </td>
               <td className="reps">
                 <input type="number" onChange={e => handleChange2(e, 5)} 
-                                     disabled={exercise !== currentExercise.current || exercise.sessionOne.setsRegular < 5} />
+                                     disabled={exercise !== currentExercise.current || exercise[session].setsRegular + exercise[session].setsAmrap < 5} />
               </td>
               <button onClick={() => handleSubmit(index)} disabled={exercise !== currentExercise.current}>Done</button>
             </tr>

@@ -11,7 +11,11 @@ function History() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await axios.get(`/history?limit=${limit}`)
+      const res = await axios.get(`/history?limit=${limit}`, {
+        headers: {
+          'Authorization': localStorage.getItem('accessToken')
+        }
+      })
       setWorkoutHistory(res.data)
     }
 

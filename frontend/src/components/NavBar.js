@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
 function NavBar({ loggedIn, logout }) {
-  const [page, setPage] = useState('')
+  const [page, setPage] = useState('overview')
 
   const getPageClass = pageName => pageName === page ? 'nav-link active' : 'nav-link'
 
@@ -11,13 +11,8 @@ function NavBar({ loggedIn, logout }) {
     <nav className="NavBar bg-light">
       <ul className="nav justify-content-center nav-tabs">
         <li className="nav-item">
-          <Link to="/overview" className={getPageClass('/overview')} onClick={() => setPage(window.location.pathname)}>
+          <Link to="/overview" className={getPageClass('overview')} onClick={() => setPage('overview')}>
             Overview
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/plan" className={getPageClass('plan')} onClick={() => setPage('plan')}>
-            Plan
           </Link>
         </li>
         <li className="nav-item">

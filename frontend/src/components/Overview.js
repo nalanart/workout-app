@@ -2,6 +2,7 @@ import CompletedWorkout from "./CompletedWorkout"
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import './Overview.css'
+import PlanWorkout from "./PlanWorkout"
 
 const parseJwt = token => {
   const base64Url = token.split('.')[1]
@@ -13,7 +14,7 @@ const parseJwt = token => {
   return JSON.parse(jsonPayload)
 }
 
-function Overview({ day, handleSkip }) {
+function Overview({ day, session, handleClick, failedExercise, handleSkip, loggedIn }) {
 
   const [latestWorkout, setLatestWorkout] = useState()
   const [name, setName] = useState('')
@@ -41,33 +42,39 @@ function Overview({ day, handleSkip }) {
 
   if(!latestWorkout) {
     return (
-      <div className="Overview-container jumbotron">
-        <h1>Hi {name},</h1>
-        <h5>Today you're doing {day}.</h5>
-        <hr></hr>
-        <h4>You don't have any previously completed {day} workouts! GET TO WORK!!!!!!!!!!!</h4>
-        <button className="btn btn-sm btn-info" onClick={handleSkip}>Skip</button>
+      <div>
+        <div className="Overview-container jumbotron">
+          <h1>Hi {name},</h1>
+          <h5>Today you're doing {day}.</h5>
+          <hr></hr>
+          <h5>You don't have any previously completed {day} workouts! GET TO WORK!!!!!!!!!!!</h5>
+          <button className="btn btn-sm btn-info" onClick={handleSkip}>Skip</button>
+        </div>
+        <PlanWorkout day={day} session={session} handleClick={handleClick} failedExercise={failedExercise} />
       </div>
     )
   }
 
   return (
-    <div className="Overview-container jumbotron">
-      <h1>Hi {name},</h1>
-      {day === 'rest' ? (
-      <div className="rest-day">
-        <h2>Today is your rest day</h2>
-        <p>Good job on your workouts!</p>
-        <button onClick={handleSkip}>Rest is for the weak</button>
-      </div>) : (
-      <div className="non-rest-day">
-        <h5>Today you're doing {day}.</h5>
-        <hr></hr>
-        <h4>The last time you did {day}:</h4>
-        <CompletedWorkout workout={latestWorkout}/>
-        <button className="btn btn-sm btn-info" onClick={handleSkip}>Skip</button>
+    <div>
+      <div className="Overview-container jumbotron">
+        <h1>Hi {name},</h1>
+        {day === 'rest' ? (
+        <div className="rest-day">
+          <h2>Today is your rest day</h2>
+          <p>Good job on your workouts!</p>
+          <button onClick={handleSkip}>Rest is for the weak</button>
+        </div>) : (
+        <div className="non-rest-day">
+          <h5>Today you're doing {day}.</h5>
+          <hr></hr>
+          <h4>The last time you did {day}:</h4>
+          <CompletedWorkout workout={latestWorkout}/>
+          <button className="btn btn-sm btn-info" onClick={handleSkip}>Skip</button>
+        </div>
+        )}
       </div>
-      )}
+      <PlanWorkout day={day} session={session} handleClick={handleClick} failedExercise={failedExercise} />
     </div>
   )
 }

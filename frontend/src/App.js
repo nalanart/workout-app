@@ -2,7 +2,6 @@ import './App.css';
 
 import NavBar from './components/NavBar'
 import Home from './components/Home'
-import PlanWorkout from './components/PlanWorkout'
 import Workout from './components/Workout'
 import History from './components/History'
 import Overview from './components/Overview'
@@ -89,8 +88,7 @@ function App() {
         <NavBar loggedIn={loggedIn} logout={logout} />
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/overview" render={props => <Overview {...props} day={schedule[day]} handleSkip={goNextDay} />} />
-          <Route path="/plan" render={props => <PlanWorkout {...props} day={schedule[day]} session={session} handleClick={handleClick} failedExercise={failedExercise} />} />
+          <Route path="/overview" render={props => <Overview {...props} day={schedule[day]} session={session} handleClick={handleClick} failedExercise={failedExercise} handleSkip={goNextDay} loggedIn={loggedIn} />} />
           <Route path="/workout" render={props => <Workout {...props} workout={currentWorkout} session={session} goNextDay={goNextDay} failedExercise={failedExercise} />} />
           <Route path="/history" component={History} />
           <Route path="/register" component={Register} />

@@ -1,8 +1,10 @@
 div.PlanWorkout-container {
+  position: relative;
+  top: 2rem;
   display: flex;
   flex-direction: column;
   margin: auto;
-  width: 70%;
+  width: 75%;
 }
 
 h2.page-name {
@@ -41,12 +43,13 @@ div.buttons-div {
   float: right;
 }
 
-button.save-workout {
- width: 50%;
-}
-
 .section-name {
   margin-top: 1rem;
+}
+
+button.save-workout {
+  width: 75%;
+  margin: auto
 }
 
 .alert {

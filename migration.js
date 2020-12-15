@@ -16,8 +16,8 @@ const createStartingExercises = async userId => {
       sessionTwo: {
         setsRegular: '3',
         repsRegular: '8-12',
-        setsAmrap: '0',
-        repsAmrap: '0'
+        setsAmrap: '',
+        repsAmrap: ''
       },
       weight: 0,
       failCount: 0
@@ -48,10 +48,10 @@ const createStartingExercises = async userId => {
       day: 'pull',
       liftType: 'main',
       sessionOne: {
-        setsRegular: '0',
-        repsRegular: '0',
-        setsAmrap: '0',
-        repsAmrap: '0'
+        setsRegular: '',
+        repsRegular: '',
+        setsAmrap: '',
+        repsAmrap: ''
       },
       sessionTwo: {
         setsRegular: '4',

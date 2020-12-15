@@ -1,9 +1,10 @@
 import './Register.css'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 const axios = require('axios')
 
 function Register() {
+  let history = useHistory()
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
@@ -26,7 +27,7 @@ function Register() {
     axios
       .post('/register', newUser)
       .then(res => {
-        form.reset()
+        history.push('/login')
         setNewUser({
           firstName: '',
           lastName: '',

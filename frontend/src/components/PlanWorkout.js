@@ -68,10 +68,18 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
     const updateExercise = async () => {
       await axios.put(`/exercises/${exerciseToEdit._id}`, exerciseToEdit)
       if(exerciseToEdit.liftType === 'main') {
-        const res = await axios.get(`/exercises?day=${day}&liftType=main`)
+        const res = await axios.get(`/exercises?day=${day}&liftType=main`, {
+          headers: {
+            'Authorization': localStorage.getItem('accessToken')
+          }
+        })
         setMains(res.data.filter(exercise => exercise[session].repsRegular))
       } else if(exerciseToEdit.liftType === 'accessory') {
-        const res = await axios.get(`/exercises?day=${day}&liftType=accessory`)
+        const res = await axios.get(`/exercises?day=${day}&liftType=accessory`, {
+          headers: {
+            'Authorization': localStorage.getItem('accessToken')
+          }
+        })
         setAccessories(prev => res.data.filter(accessory => {
           for(let i = 0; i < prev.length; i++) {
             if(prev[i]._id === accessory._id) {
@@ -212,7 +220,8 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
 
   return (
     <div className="PlanWorkout-container">
-      <h3>{day.toUpperCase()} DAY</h3>
+      {/* <h3>{day.toUpperCase()} DAY</h3> */}
+      <h2>Plan your workout</h2>
       <div className="main-lifts">
         <div className="main-lifts-container">
           <h3 className="section-name">Main Lifts</h3>
@@ -257,8 +266,8 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
                   </div>}
                 </p>
                 <div className="buttons-div">
-                  <button onClick={() => editExercise(accessory)}>Edit</button>
-                  <button onClick={() => removeAccessory(accessory, index)}>x</button>
+                  <button className="btn btn-info" onClick={() => editExercise(accessory)}>Edit</button>
+                  <button type="button" className="btn btn-close" aria-label="Close" onClick={() => removeAccessory(accessory, index)}>x</button>
                 </div>
               </li>
             ))}
@@ -270,7 +279,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
           {creating && <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />}
         </div>
       </div>
-      <button className="save-workout" onClick={() => {
+      <button className="save-workout btn btn-info" onClick={() => {
         handleClick(mains, accessories)
         setShowAlert(true)
         }}>
