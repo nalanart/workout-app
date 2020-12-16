@@ -6,8 +6,11 @@ const axios = require('axios')
 
 function History() {
 
-  const [limit, setLimit] = useState(6)
+  const [limit, setLimit] = useState(12)
   const [workoutHistory, setWorkoutHistory] = useState([])
+  const [pushHistory, setPushHistory] = useState([])
+  const [pullHistory, setPullHistory] = useState([])
+  const [legsHistory, setLegsHistory] = useState([])
 
   useEffect(() => {
     async function fetchData() {
@@ -17,6 +20,9 @@ function History() {
         }
       })
       setWorkoutHistory(res.data)
+      setPushHistory(res.data.filter(workout => workout.day === 'push'))
+      setPullHistory(res.data.filter(workout => workout.day === 'pull'))
+      setLegsHistory(res.data.filter(workout => workout.day === 'legs'))
     }
 
     try{
@@ -35,9 +41,22 @@ function History() {
     <div className="History-container">
       <h1>Workout History</h1>
       <div className="workouts-container">
-        {workoutHistory.map(workout => <CompletedWorkout key={workout._id} workout={workout} />)}
+        <div className="row">
+          <div className="col-4">
+            <h3>Push</h3>
+          {pushHistory.map(workout => <CompletedWorkout key={workout._id} workout={workout} />)}
+          </div>
+          <div className="col-4">
+            <h3>Pull</h3>
+          {pullHistory.map(workout => <CompletedWorkout key={workout._id} workout={workout} />)}
+          </div>
+          <div className="col-4">
+            <h3>Legs</h3>
+          {legsHistory.map(workout => <CompletedWorkout key={workout._id} workout={workout} />)}
+          </div>
+        </div>
       </div>
-      <button className="button-load-more" onClick={() => setLimit(prev => prev + 6)}>Load more</button>
+      <button className="button-load-more" onClick={() => setLimit(limit + 12)}>Load more</button>
     </div>
   )
 }

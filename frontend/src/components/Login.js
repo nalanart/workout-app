@@ -51,7 +51,7 @@ function Login({ login }) {
             <button className="btn btn-primary" type="submit">Log in</button>
           </div>
         </div>
-        {message && message}
+        {message && <p className="col-sm-10" style={{ color: 'red' }}>{message}</p>}
       </form>
       <div className="col-sm-10">
         Don't have an account? <Link to="/register">Create one now</Link>

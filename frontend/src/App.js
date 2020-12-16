@@ -81,16 +81,22 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <div className="logo-container bg-light">
+        <div className="logo-container">
           <Link to="/"><img src="https://www.flaticon.com/svg/static/icons/svg/249/249187.svg" alt="dumbbell" height="70"/></Link>
           <h1 className="app-name">&nbsp;Workout App</h1>
         </div>
         <NavBar loggedIn={loggedIn} logout={logout} />
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/overview" render={props => <Overview {...props} day={schedule[day]} session={session} handleClick={handleClick} failedExercise={failedExercise} handleSkip={goNextDay} loggedIn={loggedIn} />} />
-          <Route path="/workout" render={props => <Workout {...props} workout={currentWorkout} session={session} goNextDay={goNextDay} failedExercise={failedExercise} />} />
-          <Route path="/history" component={History} />
+          <Route path="/overview">
+            {!loggedIn ? <Redirect to="/" /> : <Overview day={schedule[day]} session={session} handleClick={handleClick} failedExercise={failedExercise} handleSkip={goNextDay} loggedIn={loggedIn} />}
+          </Route>
+          <Route path="/workout">
+            {!loggedIn ? <Redirect to="/" /> : <Workout workout={currentWorkout} sessions={session} goNextDay={goNextDay} failedExercise={failedExercise} />}
+          </Route>
+          <Route path="/history">
+            {!loggedIn ? <Redirect to="/" /> : <History />}
+          </Route>
           <Route path="/register" component={Register} />
           <Route path="/login" render={props => <Login {...props} login={login} />} />
         </Switch>

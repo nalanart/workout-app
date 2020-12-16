@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
 function NavBar({ loggedIn, logout }) {
-  const [page, setPage] = useState('overview')
+  const [page, setPage] = useState()
 
   const getPageClass = pageName => pageName === page ? 'nav-link active' : 'nav-link'
 
   return loggedIn ?
-    <nav className="NavBar bg-light">
+    <nav className="NavBar">
       <ul className="nav justify-content-center nav-tabs">
         <li className="nav-item">
           <Link to="/overview" className={getPageClass('overview')} onClick={() => setPage('overview')}>
@@ -16,7 +16,7 @@ function NavBar({ loggedIn, logout }) {
           </Link>
         </li>
         <li className="nav-item">
-          <Link to="/workout" className={getPageClass('currentWorkout')} onClick={() => setPage('currentWorkout')}>
+          <Link to="/workout" className={getPageClass('workout')} onClick={() => setPage('workout')}>
             Current Workout
           </Link>
         </li>
@@ -33,7 +33,7 @@ function NavBar({ loggedIn, logout }) {
       </ul>
     </nav>
   : 
-    <nav className="NavBar bg-light">
+    <nav className="NavBar">
       <ul className="nav justify-content-center nav-tabs">
         <li className="nav-item">
           <Link to="login" className={getPageClass('login')} onClick={() => setPage('login')}>

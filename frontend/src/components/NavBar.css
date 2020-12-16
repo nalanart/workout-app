@@ -1,20 +1,13 @@
-/* ul.links {
-  padding: 0;
-  display: flex;
-  justify-content: space-around;
-  list-style: none;
-}
-
-.links li:hover {
-  text-decoration: underline;
-}
-
-nav.NavBar {
-  border-bottom: 1px solid rgb(243, 240, 240);
-  width: 60%;
-  margin: auto;
-} */
-
 nav {
   margin-bottom: 3rem;
+  background-color: rgb(46, 159, 224);
+}
+
+.nav-tabs .nav-item .nav-link.active {
+  background-color: rgb(250, 250, 250);
+  color: rgb(0, 0, 0)
+}
+
+.nav-tabs .nav-item .nav-link {
+  color: rgb(255, 255, 255)
 }

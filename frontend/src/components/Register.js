@@ -42,6 +42,7 @@ function Register() {
   return (
     <div>
       <form name="register" onSubmit={register}>
+        <h2 className="form-group col-md-3">Register</h2>
         <div className="form-group col-md-3">
           <label for="input-first-name">First Name</label>
           <input type="text" name="firstName" className="form-control" id="input-first-name" onChange={handleChange} />
