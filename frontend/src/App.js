@@ -92,7 +92,7 @@ function App() {
             {!loggedIn ? <Redirect to="/" /> : <Overview day={schedule[day]} session={session} handleClick={handleClick} failedExercise={failedExercise} handleSkip={goNextDay} loggedIn={loggedIn} />}
           </Route>
           <Route path="/workout">
-            {!loggedIn ? <Redirect to="/" /> : <Workout workout={currentWorkout} sessions={session} goNextDay={goNextDay} failedExercise={failedExercise} />}
+            {!loggedIn ? <Redirect to="/" /> : <Workout workout={currentWorkout} session={session} goNextDay={goNextDay} failedExercise={failedExercise} />}
           </Route>
           <Route path="/history">
             {!loggedIn ? <Redirect to="/" /> : <History />}
