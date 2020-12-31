@@ -2,16 +2,6 @@ h1.app-name {
   display: inline;
 }
 
-div.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 3%;
-  padding-bottom: 2%;
-  background-color: rgb(46, 159, 224);
-  color: white;
-}
-
 .logo-container img:hover {
   cursor: pointer;
 }

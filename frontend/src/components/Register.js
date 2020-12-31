@@ -40,7 +40,7 @@ function Register() {
   }
 
   return (
-    <div>
+    <div className="Register">
       <form name="register" onSubmit={register}>
         <h2 className="form-group col-md-3">Register</h2>
         <div className="form-group col-md-3">
@@ -67,7 +67,7 @@ function Register() {
         {message === 'Account successfully created!' ? <div className="form-group col-sm-10 success">{message}</div> : <div className="form-group col-sm-10 error">{message}</div>}
       </form>
       <div className="col-sm-10">
-        Already have an account? <Link to="/login">Log in now</Link>
+        Already have an account? <Link to="/login">Log in</Link>
       </div>
     </div>
   )

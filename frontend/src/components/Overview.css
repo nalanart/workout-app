@@ -1,4 +1,25 @@
 div.Overview-container {
-  width: 90%;
+  color: #606060;
+  margin-bottom: 5rem;
+}
+
+.summary-section {
+  padding: 5rem 15%;
+  background-color: #F4F4F4;
+}
+
+.non-rest-day h5 {
+  display: inline;
+}
+
+button.skip-btn {
+  background-color: #FF7F4F;
+  color: #FFFFFF;
+  margin-left: 1.5rem;
+}
+
+div.plan-section {
+  width: 70%;
   margin: auto;
+  background-color: #FFFFFF;
 }

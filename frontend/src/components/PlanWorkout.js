@@ -221,10 +221,10 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
   return (
     <div className="PlanWorkout-container">
       {/* <h3>{day.toUpperCase()} DAY</h3> */}
-      <h2>Plan your workout</h2>
+      <h2><b>Plan your {day.toUpperCase()} workout</b></h2>
       <div className="main-lifts">
         <div className="main-lifts-container">
-          <h3 className="section-name">Main Lifts</h3>
+          <h5 className="section-name"><b>Main Lifts</b></h5>
           <ul className="main-lifts-ul">
             {mains.map(main => (
               <li key={main._id}>
@@ -249,7 +249,8 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
       </div>
       <div className="accessory-lifts">
         <div className="accessories-container">
-          <h3 className="section-name">Accessories</h3>
+          <h5 className="section-name"><b>Accessories</b></h5>
+          {accessories.length === 0 && <p><i>You currently have no accessories chosen.</i></p>}
           <ul className="accessory-lifts-ul">
             {accessories.map((accessory, index) => (
               <li key={index}>
@@ -272,14 +273,15 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
               </li>
             ))}
           </ul>
+          <hr></hr>
           {editMode && <EditExercise exercise={passExercise} saveChanges={saveChanges} deleteExercise={deleteExercise} />}
-          <h4>Add accessories</h4>
+          <h5><b>Add accessories</b></h5>
           <AccessoryList accessoryList={accessoryList} addAccessory={addAccessory} accessories={accessories} />
-          {!creating && <button onClick={() => setCreating(prev => !prev)} style={{ marginBottom: "3.5%" }}>Create new</button>}
+          {!creating && <button className="btn create-btn" onClick={() => setCreating(prev => !prev)} style={{ marginBottom: "3.5%" }}>Create new</button>}
           {creating && <NewAccessory handleNameChange={handleNameChange} handleSubmit={handleSubmit} handleSelect={handleSelect} newAccessory={newAccessory} />}
         </div>
       </div>
-      <button className="save-workout btn btn-info" onClick={() => {
+      <button className="btn save-btn" onClick={() => {
         handleClick(mains, accessories)
         setShowAlert(true)
         }}>

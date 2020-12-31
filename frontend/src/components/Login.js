@@ -1,3 +1,4 @@
+import './Login.css'
 import { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 const axios = require('axios')
@@ -35,7 +36,7 @@ function Login({ login }) {
   }
 
   return (
-    <div>
+    <div class="Login">
       <form onSubmit={handleSubmit}>
         <h2 className="form-group col-md-3">Log in</h2>
         <div className="form-group col-md-3">

@@ -1,4 +1,11 @@
 #root {
   font-family: 'Noto Sans', sans-serif;
-  background-color: rgb(250, 250, 250);
+}
+
+footer {
+  padding-top: 3.33rem;
+  padding-bottom: 3.33rem;
+  color: #FFFFFF;
+  background-color: #2E9FE0;
+  text-align: center;
 }

@@ -1,4 +1,31 @@
 .Home-container {
-  width: 80%;
+  width: 70%;
   margin: auto;
+  padding-top: 7.5rem;
+  padding-bottom: 7.5rem;
+}
+
+h2.app-description {
+  color: #606060
+}
+
+.register-btn {
+  background-color: #FF7F4F;
+  color: #FFFFFF;
+  padding-left: 4rem;
+  padding-right: 4rem;
+  margin-top: 2rem;
+}
+
+img.image-1 {
+  float: right;
+}
+
+a.register-login-anchor {
+  color: #FFFFFF;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #606060;
 }
