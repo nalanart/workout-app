@@ -56,7 +56,7 @@ function History() {
           </div>
         </div>
       </div>
-      <button className="button-load-more" onClick={() => setLimit(limit + 12)}>Load more</button>
+      <button className="btn btn-load-more" onClick={() => setLimit(limit + 12)}>Load more</button>
     </div>
   )
 }

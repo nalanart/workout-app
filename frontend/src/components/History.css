@@ -1,6 +1,8 @@
 div.History-container {
-  width: 90%;
-  margin: 0 auto;
+  width: 70%;
+  margin: auto;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
 .row {
@@ -10,4 +12,9 @@ div.History-container {
 
 div.workouts-container {
   margin-top: 2rem;
+}
+
+.btn-load-more {
+  background-color: #FF7F4F;
+  color: #FFFFFF;
 }

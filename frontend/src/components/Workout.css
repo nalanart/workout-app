@@ -3,10 +3,17 @@ td p {
 }
 
 div.Workout-container {
-  width: 80%;
-  margin: 0 auto;
+  width: 70%;
+  margin: auto;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
 th h5 {
   margin-bottom: 0;
+}
+
+.btn-finish {
+  background-color: #FF7F4F;
+  color: #FFFFFF;
 }

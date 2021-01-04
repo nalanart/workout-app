@@ -184,12 +184,12 @@ function Workout({ workout, session, goNextDay, failedExercise }) {
                 <input type="number" onChange={e => handleChange2(e, 5)} 
                                      disabled={exercise !== currentExercise.current || exercise[session].setsRegular + exercise[session].setsAmrap < 5} />
               </td>
-              <button onClick={() => handleSubmit(index)} disabled={exercise !== currentExercise.current}>Done</button>
+              <button className="btn btn-info" onClick={() => handleSubmit(index)} disabled={exercise !== currentExercise.current}>Done</button>
             </tr>
           ))}
         </tbody>
       </table>
-      <button className="btn btn-success" onClick={postWorkout}>Finish Workout</button>
+      <button className="btn btn-finish" onClick={postWorkout}>Finish Workout</button>
     </div>
   )
 }

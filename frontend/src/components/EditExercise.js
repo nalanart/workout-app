@@ -63,7 +63,8 @@ function EditExercise({ exercise, saveChanges, deleteExercise }) {
     <div className="EditExercise">
       <h3>Edit Exercise</h3>
       <form className="form-edit-exercise">
-        <input value={exerciseEdit.name} onChange={handleChange} />
+        <label for="exercise-name">Name:</label>
+        <input id="exercise-name" value={exerciseEdit.name} onChange={handleChange} />
         <label for="sets">Sets:</label>
         <select id="sets" name="sets" onChange={handleSelect}>
           <option value='3' selected={exercise.sessionOne.setsRegular === "3"}>3</option>
@@ -81,8 +82,8 @@ function EditExercise({ exercise, saveChanges, deleteExercise }) {
           <p>Weight (lbs):</p>
           <input type="number" placeholder={exercise.weight} value={exerciseEdit.weight} min="0" step="2.5" onChange={handleWeight} disabled={!exercise.weight}/>
         </div>
-        <button onClick={() => saveChanges(exerciseEdit)}>Save</button>
-        <button onClick={() => deleteExercise(exerciseEdit._id)}>Delete</button>
+        <button className="btn btn-info" onClick={() => saveChanges(exerciseEdit)}>Save</button>
+        <button className="btn btn-info" onClick={() => deleteExercise(exerciseEdit._id)}>Delete</button>
       </form>
     </div>
   )
