@@ -5,11 +5,12 @@ import EditExercise from './EditExercise'
 import axios from 'axios'
 import './PlanWorkout.css'
 
-function PlanWorkout({ day, session, handleClick, failedExercise }) {
+function PlanWorkout({ user, day, session, handleClick, failedExercise }) {
   const [mains, setMains] = useState([])
   const [accessories, setAccessories] = useState([])
   const [accessoryList, setAccessoryList] = useState([])
   const [newAccessory, setNewAccessory] = useState({
+    userId: user._id,
     name: '',
     day: 'legs',
     liftType: 'accessory',
@@ -170,7 +171,11 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
   const handleSubmit = (event) => {
     event.preventDefault()
     
-    axios.post('/exercises', newAccessory).then(res => {
+    axios.post('/exercises', newAccessory, {
+      headers: {
+        'Authorization': localStorage.getItem('accessToken')
+      }
+    }).then(res => {
       console.log(res)
     }).catch(err => {
       console.log(err)
@@ -178,6 +183,7 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
 
     setAccessoryList(prev => [...prev, newAccessory])
     setNewAccessory({
+      userId: user._id,
       name: '',
       day: newAccessory.day,
       liftType: 'accessory',
@@ -215,7 +221,8 @@ function PlanWorkout({ day, session, handleClick, failedExercise }) {
   }
 
   const deleteExercise = async id => {
-    await axios.delete(`/exercises/${id}`)
+    const res = await axios.delete(`/exercises/${id}`)
+    console.log(res)
   }
 
   return (

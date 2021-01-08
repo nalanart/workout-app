@@ -38,7 +38,8 @@ exercisesRouter.post('/', authenticateToken, async (req, res) => {
       day: req.body.day,
       liftType: req.body.liftType,
       sessionOne: req.body.sessionOne,
-      sessionTwo: req.body.sessionTwo
+      sessionTwo: req.body.sessionTwo,
+      weight: req.body.weight
     })
     res.sendStatus(201)
   } catch(error) {

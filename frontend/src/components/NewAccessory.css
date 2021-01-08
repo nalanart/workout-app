@@ -1,28 +1,25 @@
-div.NewAccessory {
-  margin-bottom: 4%;
+.input-name {
+  width: 25%;
 }
 
-form.form-new-accessory {
-  display: flex;
-  flex-direction: column;  
+.input-type,
+.select-sets {
+  width: 10%;
 }
 
-.input-reps p,
-div.input-name,
-div.input-type,
-div.select-sets,
-div.input-reps {
-  display: inline;
+.input-name input,
+.input-type select,
+.select-sets select {
+  margin-bottom: 1rem;
 }
 
-div.input-name,
-div.select-sets,
-.input-reps input
- {
-  margin-right: 15px;
+.input-reps label {
+  margin-right: 1rem;
 }
 
-div.form-name-and-type,
-div.form-reps-and-sets {
-  margin-bottom: 2%;
+.create-exercise {
+  color: #FFFFFF;
+  background-color: #A3A3A3;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }

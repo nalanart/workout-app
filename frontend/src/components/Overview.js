@@ -18,11 +18,13 @@ function Overview({ day, session, handleClick, failedExercise, handleSkip, logge
 
   const [latestWorkout, setLatestWorkout] = useState()
   const [name, setName] = useState('')
+  const [user, setUser] = useState({})
 
   useEffect(() => {
     async function getLatestWorkout() {
       const user = parseJwt(localStorage.getItem('accessToken'))
       const res = await axios.get(`/users/${user._id}`)
+      setUser(res.data)
       setName(res.data.firstName)
 
       const res2 = await axios.get(`/history?day=${day}`, {
@@ -74,7 +76,7 @@ function Overview({ day, session, handleClick, failedExercise, handleSkip, logge
         </div>
       </div>
       <div className="plan-section">
-        <PlanWorkout day={day} session={session} handleClick={handleClick} failedExercise={failedExercise} />
+        <PlanWorkout user={user} day={day} session={session} handleClick={handleClick} failedExercise={failedExercise} />
       </div>
     </div>
   )
