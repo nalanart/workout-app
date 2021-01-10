@@ -7,7 +7,7 @@ function NavBar({ loggedIn, logout }) {
 
   const getPageClass = pageName => pageName === page ? 'nav-link active' : 'nav-link'
 
-  return loggedIn ?
+  return loggedIn === 'true' ?
     <nav className="NavBar">
       <div className="nav-links-container">
         <ul className="nav">

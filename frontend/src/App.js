@@ -17,7 +17,7 @@ const axios = require('axios')
 const schedule = ['push', 'pull', 'legs', 'rest', 'push', 'pull', 'legs']
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('loggedIn'))
   const [day, setDay] = useState(0)
   const [session, setSession] = useState('sessionOne')
   const [currentWorkout, setCurrentWorkout] = useState({
@@ -28,7 +28,6 @@ function App() {
   useEffect(() => {
     setDay(ls.get('day') || 0)
     setCurrentWorkout(ls.get('currentWorkout') || {mains: [], accessories: []})
-    setLoggedIn(false)
   }, [])
 
   useEffect(() => {
@@ -64,11 +63,13 @@ function App() {
   // })
 
   const login = () => {
-    setLoggedIn(true)
+    setLoggedIn('true')
+    localStorage.setItem('loggedIn', 'true')
   }
 
   const logout = () => {
-    setLoggedIn(false)
+    setLoggedIn('false')
+    localStorage.setItem('loggedIn', 'false')
   }
 
   const failedExercise = exercise => {
@@ -107,21 +108,21 @@ function App() {
                  path="/" 
                  component={Home} />
           <Route path="/overview"
-                 render={props => loggedIn ? (
+                 render={props => loggedIn === 'true' ? (
                   <Overview {...props} day={schedule[day]} session={session} handleClick={handleClick} failedExercise={failedExercise} handleSkip={goNextDay} loggedIn={loggedIn} />
                  ) : (
                   <Redirect to="/login" />
                  )}>
           </Route>
           <Route path="/workout"
-                 render={props => loggedIn ? (
+                 render={props => loggedIn === 'true' ? (
                    <Workout {...props} workout={currentWorkout} session={session} goNextDay={goNextDay} failedExercise={failedExercise} />
                  ) : (
                    <Redirect to="/login" />
                  )}>
           </Route>
           <Route path="/history" 
-                 render={props => loggedIn ? (
+                 render={props => loggedIn === 'true' ? (
                    <History />
                  ) : (
                    <Redirect to="/login" />
